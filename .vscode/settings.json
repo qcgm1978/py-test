@@ -1,0 +1,16 @@
+{
+    "python.pythonPath": "C:\\Users\\zhang\\AppData\\Local\\Programs\\Python\\Python38-32\\python.exe",
+    "python.linting.pylintPath": "C:\\Users\\zhang\\AppData\\Roaming\\Python\\Python38\\Scripts\\pylint.exe",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./test",
+        "-p",
+        "test*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 100
+}
