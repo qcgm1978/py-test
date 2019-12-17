@@ -14,6 +14,9 @@ class TddInPythonExample(unittest.TestCase):
     def test_fractions(self):
         self.assertTrue(fractions)
         self.assertTrue(callable(fractions.Fraction))
+        self.assertFalse(callable(fractions.Fraction(1,3)))
+        self.assertFalse(callable(fractions.Fraction(1, 3) * 2))
+        self.assertRaises(ZeroDivisionError, fractions.Fraction,1,0)
 
    
 
