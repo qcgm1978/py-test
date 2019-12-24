@@ -60,5 +60,18 @@ class TddInPythonExample(unittest.TestCase):
         self.assertEqual(len(a_list),7)
         self.assertEqual(a_list[-1],['g','h','i'])
 
+    def test_list_search(self):
+        self.assertEqual(self.a_list,['a','b','mpilgrim','z','example'])
+        self.assertEqual(self.a_list.count('new'),0)
+        self.assertEqual((self.a_list+['new']).count('new'),1)
+        self.assertEqual((self.a_list+['new','new']).count('new'),2)
+        self.assertEqual('new' in (self.a_list+['new','new']),True)
+        self.assertTrue('new' in (self.a_list+['new','new']))
+        self.assertFalse('new1' in (self.a_list+['new','new']))
+        self.assertEqual(self.a_list.index('b'),1)
+        def valErr():
+            self.a_list.index('c')
+        self.assertRaises(ValueError,valErr)
+
 if __name__ == '__main__':
     unittest.main()
