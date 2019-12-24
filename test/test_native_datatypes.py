@@ -89,5 +89,11 @@ class TddInPythonExample(unittest.TestCase):
         clone.pop(1)
         self.assertEqual(clone,['a','b','c','d'])
 
+    def test_list_as_bool(self):
+        self.assertFalse([])
+        self.assertTrue(['a'])
+        self.assertTrue([False])
+
+
 if __name__ == '__main__':
     unittest.main()
