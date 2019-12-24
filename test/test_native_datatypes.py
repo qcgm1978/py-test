@@ -72,6 +72,22 @@ class TddInPythonExample(unittest.TestCase):
         def valErr():
             self.a_list.index('c')
         self.assertRaises(ValueError,valErr)
+    def test_remove_list_item(self):
+        clone = self.a_list.copy()
+        self.assertEqual(clone[1],'b')
+        del clone[1]
+        self.assertEqual(clone[1],'mpilgrim')
+        def del_item():
+            clone.remove('mpilgrim')
+        del_item()
+        self.assertEqual(clone[1],'z')
+        self.assertRaises(ValueError,del_item)
+        self.assertEqual(clone.pop(),'example')
+        self.assertEqual(clone,['a', 'z'])
+        clone.extend(['b','c','d'])
+        self.assertEqual(clone,['a','z','b','c','d'])
+        clone.pop(1)
+        self.assertEqual(clone,['a','b','c','d'])
 
 if __name__ == '__main__':
     unittest.main()
