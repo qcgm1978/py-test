@@ -47,6 +47,27 @@ class TddInPythonExample(unittest.TestCase):
         a_set.clear()
         self.assertEqual(a_set,set())
         self.assertRaises(KeyError,a_set.pop)
+
+    def test_set_operation(self):
+        a_set = {2, 4, 5, 9, 12, 21, 30, 51, 76, 127, 195}
+        self.assertFalse(31 in a_set)
+        self.assertTrue(30 in a_set)
+        b_set={1,2}
+        self.assertEqual(a_set.union(b_set), {1,2, 4, 5, 9, 12, 21, 30, 51, 76, 127, 195})
+        self.assertEqual(a_set.intersection(b_set), {2})
+        self.assertEqual(a_set.difference(b_set), {4, 5, 9, 12, 21, 30, 51, 76, 127, 195})
+        self.assertEqual(a_set.symmetric_difference(b_set), {1,4, 5, 9, 12, 21, 30, 51, 76, 127, 195})
+        self.assertEqual(b_set.symmetric_difference(a_set), {1,4, 5, 9, 12, 21, 30, 51, 76, 127, 195})
+        self.assertEqual(b_set.symmetric_difference(a_set), a_set.symmetric_difference(b_set))
+        self.assertEqual(a_set.union(b_set),b_set.union(a_set))
+        self.assertEqual(a_set.intersection(b_set),b_set.intersection(a_set))
+        self.assertNotEqual(a_set.difference(b_set),b_set.difference(a_set))
+        a_set={1,2,3}
+        b_set={1,2,3,4}
+        self.assertTrue(a_set.issubset(b_set))
+        self.assertTrue(b_set.issuperset(a_set))
+        a_set.add(5)
+        self.assertFalse(a_set.issubset(b_set))
         
 
 
