@@ -69,6 +69,10 @@ class TddInPythonExample(unittest.TestCase):
         a_set.add(5)
         self.assertFalse(a_set.issubset(b_set))
         
+    def test_set_as_bool(self):
+        self.assertFalse(set())
+        self.assertTrue({'a'})
+        self.assertTrue({False})
 
 
 
