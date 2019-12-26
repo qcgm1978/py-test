@@ -43,6 +43,12 @@ class TDDDiveIntoPython3(unittest.TestCase):
         # a_list=list(humansize_dict.keys)
         # self.assertEqual(a_list,[])
 
+    def test_swap(self):
+        a_dict={'a':1,'b':2,'c':3}
+        two_dict={value:key for key,value in a_dict.items()}
+        self.assertEqual(two_dict,{1:'a',2:'b',3:'c'})
+        a_dict={'a':[1,2,3],'b':4,'c':5}
+        self.assertRaises(TypeError,lambda: {value:key for key,value in a_dict.items()} )
 
 if __name__ == '__main__':
     unittest.main()
