@@ -1,6 +1,9 @@
 import unittest
 import sys
-
+import os
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 from app.calculator import Calculator  # pylint: disable=import-error
 from app.humansize import approximate_size  # pylint: disable=import-error
 
