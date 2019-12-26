@@ -29,5 +29,20 @@ class TDDDiveIntoPython3(unittest.TestCase):
         size=[(approximate_size(os.stat(f).st_size),f) for f in glob.glob('*.py')]
         self.assertEqual(type(size[0]),tuple)
 
+    def test_dict(self):
+        metadata=[(f,os.stat(f)) for f in glob.glob('*test*.py')]
+        self.assertRegexpMatches(metadata[0][0],'test')
+        metadata_dict={f:os.stat(f) for f in glob.glob('*test*.py')}
+        self.assertEqual(type(metadata_dict),dict)
+        list_dict=list(metadata_dict.keys())
+        self.assertRegexpMatches(list_dict[0],'.py')
+        size=metadata_dict['test_list_comprehensions.py'].st_size
+        self.assertTrue(size>0)
+        metadata_dict={f:os.stat(f) for f in glob.glob('*')}
+        # humansize_dict={os.path.splitext(f)[0]:approximate_size(meta.st_size) for f, meta in metadata_dict.items() if meta.st_size>6000}
+        # a_list=list(humansize_dict.keys)
+        # self.assertEqual(a_list,[])
+
+
 if __name__ == '__main__':
     unittest.main()
