@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3",
     "python.linting.pylintPath": "C:\\Users\\zhang\\AppData\\Roaming\\Python\\Python38\\Scripts\\pylint.exe",
     "python.testing.unittestArgs": [
         "-v",
