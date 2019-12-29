@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/local/bin/python3",
+    "python.pythonPath": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
     "python.linting.pylintPath": "C:\\Users\\zhang\\AppData\\Roaming\\Python\\Python38\\Scripts\\pylint.exe",
     "python.testing.unittestArgs": [
         "-v",
@@ -12,5 +12,6 @@
     "python.testing.nosetestsEnabled": false,
     "python.testing.unittestEnabled": true,
     "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 100
+    "files.autoSaveDelay": 100,
+    "python.formatting.provider": "yapf"
 }
