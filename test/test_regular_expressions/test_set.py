@@ -78,6 +78,13 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertTrue(re.search(pattern, 'MMMDCCCLXXXVIII', re.VERBOSE))
         self.assertFalse(re.search(pattern, 'M'))
 
+    def test_phone(self):
+        phonePattern = re.compile(r'^(\d{3})-(\d{3})-(\d{4})$')
+        search = phonePattern.search('800-555-1212')
+        group=search.groups()
+        self.assertEqual(group,('800','555','1212'))
+        self.assertEqual(type(search),re.Match)
+        self.assertRaises(AttributeError,lambda: phonePattern.search('800-555-12125').groups())
 
 if __name__ == '__main__':
     unittest.main()
