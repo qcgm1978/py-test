@@ -4,6 +4,7 @@ import re,os,sys
 from plural import plural  # pylint: disable=import-error
 from plural_pattern import plural_pattern ,rules # pylint: disable=import-error
 from plural_file import plural_file ,rules # pylint: disable=import-error
+from plural_yield import plural_yield,rules_yield # pylint: disable=import-error
 class TDDDiveIntoPython3(unittest.TestCase):
 
     def plural(noun):          
@@ -43,7 +44,11 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertEqual(sub,'vacancies')
 
     
-
+    def make_counter(self,x):
+     print('entering make_counter')
+     while True:
+         yield x                    
+         x = x + 1
 
     def test_plural(self):
         self.assertTrue(plural)
@@ -54,6 +59,13 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertEqual(plural1,'houses')
         plural1=plural_file('bicycle')
         self.assertEqual(plural1,'bicycles')
+        plural1=plural_yield('window')
+        self.assertEqual(plural1,'windows')
+        self.assertTrue(rules_yield)
+        gen=self.make_counter(5)
+        self.assertEqual(next(gen),5)
+        self.assertEqual(next(gen),6)
+        self.assertEqual(next(gen),7)
 
 
 
