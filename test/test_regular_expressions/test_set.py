@@ -85,6 +85,14 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertEqual(group,('800','555','1212'))
         self.assertEqual(type(search),re.Match)
         self.assertRaises(AttributeError,lambda: phonePattern.search('800-555-12125').groups())
+        search=phonePattern.search('800 555 1212 1234')
+        self.assertIsNone(search)
+        phonePattern = re.compile(r'^(\d{3})\D+(\d{3})\D+(\d{4})\D+(\d+)$') 
+        search=phonePattern.search('800 555 1212 1234')
+        self.assertIsNotNone(search)
+        phonePattern = re.compile(r'^(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$') 
+        search=phonePattern.search('80055512121234')
+        self.assertIsNotNone(search)
 
 if __name__ == '__main__':
     unittest.main()
