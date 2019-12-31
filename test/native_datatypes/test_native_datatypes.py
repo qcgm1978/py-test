@@ -24,6 +24,13 @@ class TddInPythonExample(unittest.TestCase):
         self.assertAlmostEqual(math.pi,3.14,2)
         self.assertEqual(math.sin(math.pi/2),1.0)
         self.assertAlmostEqual(round(math.tan(math.pi/4),2),1.0,2)
+        regular_pentagon=180*3
+        angle=regular_pentagon/5
+        self.assertEqual(angle,108)
+        side_length=1
+        φ=1**2+1**2-2*1*1*math.cos(angle)
+        self.assertAlmostEqual(φ,1.25,2)
+
    
     a_list=['a','b','mpilgrim','z','example']
     def test_list(self):
