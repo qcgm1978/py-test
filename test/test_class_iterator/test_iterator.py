@@ -15,8 +15,12 @@ class Fib:
         fib = self.a
         if fib > self.max:
             raise StopIteration
-        self.a= self.b
-        self.b=fib+self.b
+        # self.a= self.b
+        # self.b=fib+self.b
+        # (self.a, self.b) = (self.b, self.a + self.b)
+        # This is just a special case of the tuple abbreviation: 
+        # you could equivalently write the above like the following:
+        self.a, self.b = self.b, self.a + self.b
         return fib
 class PapayaWhip:
     pass
