@@ -48,15 +48,25 @@ class TDDDiveIntoPython3(unittest.TestCase):
 
     def test_class(self):
         rules=LazyRules()
-        self.assertEqual(rules.pattern_file.closed,False)
-        self.assertEqual(rules.cache,[])
         file = './test/test_regular_expressions/plural4-rules.txt'
         self.assertEqual(rules.rules_filename,file)
         self.assertEqual(rules.__class__.rules_filename,file)
         self.rules_filename=None
-        self.assertIsNone(self.rules_filename)
-        self.rules_filename=file
-        self.assertEqual(self.rules_filename,file)
+        self.assertEqual(rules.rules_filename,file)
+        self.rules_filename=file+'test'
+        self.assertEqual(rules.rules_filename,file)
+        self.assertTrue(rules.plural)
+        self.assertEqual(len(rules.cache),4)
+        
+        plural=rules.plural('face')
+        self.assertEqual(plural,'faces')
+        plural=rules.plural('house')
+        self.assertEqual(plural,'houses')
+        plural=rules.plural('bicycle')
+        self.assertEqual(plural,'bicycles')
+        plural=rules.plural('window')
+        self.assertEqual(plural,'windows')
+
 
 
 if __name__ == '__main__':
