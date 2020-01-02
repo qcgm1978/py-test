@@ -1,5 +1,5 @@
 import unittest
-
+from plural_iterator import LazyRules
 class Fib:
     '''iterator that yields numbers in the Fibonacci sequence'''
 
@@ -45,6 +45,18 @@ class TDDDiveIntoPython3(unittest.TestCase):
         for n in Fib(10):
             arr.append(n)
         self.assertEqual(arr,[0,1,1,2,3,5,8])
+
+    def test_class(self):
+        rules=LazyRules()
+        self.assertEqual(rules.pattern_file.closed,False)
+        self.assertEqual(rules.cache,[])
+        file = './test/test_regular_expressions/plural4-rules.txt'
+        self.assertEqual(rules.rules_filename,file)
+        self.assertEqual(rules.__class__.rules_filename,file)
+        self.rules_filename=None
+        self.assertIsNone(self.rules_filename)
+        self.rules_filename=file
+        self.assertEqual(self.rules_filename,file)
 
 
 if __name__ == '__main__':
