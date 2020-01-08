@@ -36,13 +36,19 @@ class TDDDiveIntoPython3(unittest.TestCase):
 
     def test_gen_expression(self):
         unique_characters=['E','D','M','O','N','S','R','Y']
-        gen=(ord(c) for c in unique_characters)
+        gen=(ord(c) for c in unique_characters)#A generator expression is like an anonymous function that yields values. The expression itself looks like a list comprehension, but it’s wrapped in parentheses instead of square brackets.
+
         self.assertIsInstance(gen,object)
         self.assertEqual(next(gen),69)
         self.assertEqual(next(gen),68)
         a_tuple=tuple(gen)
         self.assertEqual(len(a_tuple),6)
         self.assertEqual(a_tuple,(77,79,78,83,82,89))
+        def ord_map(a_string):
+            for c in a_string:
+             yield ord(c)
+        gen =ord_map(unique_characters)
+        self.assertEqual(next(gen),69)
 
 if __name__ == '__main__':
     unittest.main()
