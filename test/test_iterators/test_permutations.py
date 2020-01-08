@@ -12,6 +12,12 @@ class TestPermutation(unittest.TestCase):
         self.assertEqual(next(perms),(3,2))
         self.assertRaises(StopIteration,lambda: next(perms))
 
+    def test_permutation_str(self):
+        perms=itertools.permutations('ABC',3)
+        self.assertEqual(next(perms),('A','B','C'))
+        self.assertEqual(next(perms),('A','C','B'))
+        #todo return data types and go on after some time
+
 
 
 
