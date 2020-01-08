@@ -20,8 +20,19 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertEqual(a_string,'SENDMOREMONEY')
         self.assertEqual(set(a_string),{'S','E','N','D','M','O','R','Y'})
 
-       
-
+    def test_assert(self):
+        def assert_error(str):
+            unique_characters=set(str)
+            if len(unique_characters)>10:
+                raise AssertionError('Too many letters')
+        try:
+            assert 1+1==2
+            assert 1+2==3
+            assert_error('abc')
+            assert_error('abcdefghij')
+            assert_error('abcdefghijj')
+        except AssertionError:
+            self.fail('AssertionError Raised')
 
 
 if __name__ == '__main__':
