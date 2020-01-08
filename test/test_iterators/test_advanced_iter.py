@@ -34,6 +34,15 @@ class TDDDiveIntoPython3(unittest.TestCase):
         except AssertionError:
             self.fail('AssertionError Raised')
 
+    def test_gen_expression(self):
+        unique_characters=['E','D','M','O','N','S','R','Y']
+        gen=(ord(c) for c in unique_characters)
+        self.assertIsInstance(gen,object)
+        self.assertEqual(next(gen),69)
+        self.assertEqual(next(gen),68)
+        a_tuple=tuple(gen)
+        self.assertEqual(len(a_tuple),6)
+        self.assertEqual(a_tuple,(77,79,78,83,82,89))
 
 if __name__ == '__main__':
     unittest.main()
