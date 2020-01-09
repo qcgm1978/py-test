@@ -4,11 +4,14 @@ import math
 class TddNativeDatatypes(unittest.TestCase):
 
     def test_test(self):
-        types_list=[bool]
-        val_list=[True]
-        self.assertIsInstance(True,bool)
-        for index,elem in enumerate(val_list):
-            self.assertIsInstance(elem,types_list[index])
+        def test_types(val_list=[(True,False),0,'',b'',[], ("", "") ,{''},{'':''}]):
+            types_list=[bool,int,str,bytes,list,tuple,set,dict]
+            
+            for index,elem in enumerate(val_list):
+                if isinstance(elem,list):
+                    test_types(elem)
+                else:
+                    self.assertIsInstance(elem,types_list[index])
 
 
     def test_num_operate(self):
