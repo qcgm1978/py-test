@@ -1,10 +1,16 @@
 import unittest
 import fractions
 import math
-class TddInPythonExample(unittest.TestCase):
+class TddNativeDatatypes(unittest.TestCase):
 
     def test_test(self):
-        self.assertEqual(4, True*4)
+        types_list=[bool]
+        val_list=[True]
+        self.assertIsInstance(True,bool)
+        for index,elem in enumerate(val_list):
+            self.assertIsInstance(elem,types_list[index])
+
+
     def test_num_operate(self):
         self.assertEqual(11 / 2, 5.5)
         self.assertEqual(11//2,5)
