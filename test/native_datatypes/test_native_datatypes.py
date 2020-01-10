@@ -2,18 +2,16 @@ import unittest
 import fractions
 import math
 class TddNativeDatatypes(unittest.TestCase):
-
     def test_test(self):
-        def test_types(val_list=[(True,False),0,'',b'',[], ("", "") ,{''},{'':''}]):
-            types_list=[bool,int,str,bytes,list,tuple,set,dict]
-            
+        def test_types(val_list=[False,[0,0.,1/2],'',b'',[], ("", "") ,{''},{'':''}],
+        types_list=[bool,[int,float,float],str,bytes,list,tuple,set,dict]):
             for index,elem in enumerate(val_list):
-                if isinstance(elem,list):
-                    test_types(elem)
+                item = types_list[index]
+                if isinstance(item,list):
+                    test_types(elem,item)
                 else:
-                    self.assertIsInstance(elem,types_list[index])
-
-
+                    self.assertIsInstance(elem,item)
+        test_types()
     def test_num_operate(self):
         self.assertEqual(11 / 2, 5.5)
         self.assertEqual(11//2,5)
@@ -27,7 +25,6 @@ class TddNativeDatatypes(unittest.TestCase):
         self.assertFalse(callable(fractions.Fraction(1,3)))
         self.assertFalse(callable(fractions.Fraction(1, 3) * 2))
         self.assertRaises(ZeroDivisionError, fractions.Fraction, 1, 0)
-
     def test_Trigonometry(self):
         self.assertTrue(math)
         self.assertAlmostEqual(math.pi,3.14,2)
@@ -39,8 +36,6 @@ class TddNativeDatatypes(unittest.TestCase):
         side_length=1
         φ=1**2+1**2-2*1*1*math.cos(angle)
         self.assertAlmostEqual(φ,1.25,2)
-
-   
     a_list=['a','b','mpilgrim','z','example']
     def test_list(self):
         self.assertEqual(self.a_list,['a','b','mpilgrim','z','example'])
@@ -48,7 +43,6 @@ class TddNativeDatatypes(unittest.TestCase):
         self.assertEqual(self.a_list[4],'example')
         self.assertEqual(self.a_list[-1],'example')
         self.assertEqual(self.a_list[-3],'mpilgrim')
-
     def test_slicing(self):
         self.assertEqual(self.a_list[1:3],['b','mpilgrim'])
         self.assertEqual(self.a_list[1:-1],['b','mpilgrim','z'])
@@ -56,7 +50,6 @@ class TddNativeDatatypes(unittest.TestCase):
         self.assertEqual(self.a_list[:3],['a','b','mpilgrim'])
         self.assertEqual(self.a_list[3:],['z','example'])
         self.assertEqual(self.a_list[:],self.a_list)
-
     def test_add_items_to_list(self):
         a_list=['a']
         self.assertEqual(a_list+[2.0,3],['a',2.0,3])
@@ -75,7 +68,6 @@ class TddNativeDatatypes(unittest.TestCase):
         self.assertEqual(a_list,['a','b','c','d','e','f',['g','h','i']])
         self.assertEqual(len(a_list),7)
         self.assertEqual(a_list[-1],['g','h','i'])
-
     def test_list_search(self):
         self.assertEqual(self.a_list,['a','b','mpilgrim','z','example'])
         self.assertEqual(self.a_list.count('new'),0)
@@ -104,12 +96,9 @@ class TddNativeDatatypes(unittest.TestCase):
         self.assertEqual(clone,['a','z','b','c','d'])
         clone.pop(1)
         self.assertEqual(clone,['a','b','c','d'])
-
     def test_list_as_bool(self):
         self.assertFalse([])
         self.assertTrue(['a'])
         self.assertTrue([False])
-
-
 if __name__ == '__main__':
     unittest.main()
