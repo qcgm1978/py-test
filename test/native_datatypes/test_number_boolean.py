@@ -1,5 +1,10 @@
-import unittest
+import unittest,os,sys
 import fractions
+from functools import partial
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+from app.humansize import approximate_size  # pylint: disable=import-error
 
 def is_it_true(anything):
         if anything:
@@ -8,8 +13,8 @@ def is_it_true(anything):
             return False
 class TddInPython(unittest.TestCase):
 
-    def test_test(self):
-        self.assertEqual(4, True*4)
+    def test_bool(self):
+        self.assertRaises(ValueError,partial(approximate_size,-1))
     
    
 

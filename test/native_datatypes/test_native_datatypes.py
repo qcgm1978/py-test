@@ -12,6 +12,9 @@ class TddNativeDatatypes(unittest.TestCase):
                 else:
                     self.assertIsInstance(elem,item)
         test_types()
+
+
+        
     def test_num_operate(self):
         self.assertEqual(11 / 2, 5.5)
         self.assertEqual(11//2,5)
