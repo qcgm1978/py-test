@@ -15,6 +15,16 @@ class TddInPython(unittest.TestCase):
 
     def test_bool(self):
         self.assertRaises(ValueError,partial(approximate_size,-1))
+        size=1
+        self.assertFalse(size<0)
+        size=0
+        self.assertFalse(size<0)
+        size=-1
+        self.assertTrue(size<0)
+        self.assertEqual(True+True,2)
+        self.assertEqual(True-False,1)
+        self.assertEqual(True*False,0)
+        self.assertRaises(ZeroDivisionError,lambda: True/False)
     
    
 
