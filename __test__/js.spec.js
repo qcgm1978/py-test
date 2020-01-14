@@ -15,3 +15,34 @@ it(`push`, () => {
   expect(a_list.length).toBe(4);
   expect(a_list[a_list.length - 1]).toEqual(["d", "e", "f"]);
 });
+
+it(`search list(array)`, () => {
+  const a_list = ["a", "b", "new", "mpilgrim", "new"];
+  expect(a_list.indexOf("new")).toBe(2);
+  expect("new" in a_list).toBeFalsy();
+  expect(a_list.indexOf("new")).not.toBe(-1);
+  expect(a_list.indexOf("c")).toBe(-1);
+});
+
+it(`remote list(array) items`, () => {
+  let a_list = ["a", "b", "new", "mpilgrim", "new"];
+  delete a_list[1];
+  expect(a_list)
+    .toEqual(["a", undefined, "new", "mpilgrim", "new"])
+    .toEqual(["a", , "new", "mpilgrim", "new"]);
+  a_list = ["a", "b", "new", "mpilgrim", "new"];
+  a_list.splice(1, 1);
+  expect(a_list).toEqual(["a", "new", "mpilgrim", "new"]);
+  a_list = ["a", "b", "new", "mpilgrim", "new"];
+  const index = a_list.indexOf("new");
+  a_list.splice(index, 1);
+  expect(a_list).toEqual(["a", "b", "mpilgrim", "new"]);
+  a_list = ["a", "b", "new", "mpilgrim", "new"];
+  expect(a_list.pop()).toBe("new");
+  expect(a_list).toEqual(["a", "b", "new", "mpilgrim"]);
+  expect(a_list.pop()).toBe("mpilgrim");
+});
+
+it(`list(array) in a Boolean context`, () => {
+  expect([]).toBeTruthy();
+});

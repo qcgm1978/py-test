@@ -17,7 +17,10 @@ class test_list(unittest.TestCase):
         a_list.append(True)
         self.assertEqual(a_list,['a',2.0,3,True])
 
-
+    def test_remove(self):
+        a_list = ['a', 'b', 'new', 'mpilgrim', 'new']
+        a_list.remove('new')
+        self.assertEqual(a_list,['a', 'b', 'mpilgrim','new'])
 
 
 

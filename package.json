@@ -6,10 +6,25 @@
   "directories": {
     "test": "test"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-chain"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
   "dependencies": {
     "jest": "^24.9.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest-chain": "^1.1.2"
+  },
   "scripts": {
     "test": "jest --watch"
   },
