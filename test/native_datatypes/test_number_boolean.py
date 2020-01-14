@@ -26,7 +26,11 @@ class TddInPython(unittest.TestCase):
         self.assertEqual(True*False,0)
         self.assertRaises(ZeroDivisionError,lambda: True/False)
     
-   
+    def test_numbers(self):
+       self.assertIsInstance(1,int)
+       self.assertTrue(isinstance(1,int))
+       self.assertEqual(1+1.0,2.0)
+       self.assertIsInstance(2.0,float)
 
     def test_num(self):
         self.assertTrue(is_it_true(1))
