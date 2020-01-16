@@ -96,11 +96,20 @@ it(`Py: There are two different ways to add values to an existing set: the add()
     .toBeInstanceOf(Object)
     .toHaveProperty("add")
     .not.toHaveProperty("update");
-  Set.prototype.update = function(arr) {
-    arr.map(item => this.add(item));
+  Set.prototype.update = function() {
+    Array.from(arguments).map(item => {
+      if (item instanceof Array) {
+        item.map(it => this.add(it));
+      } else {
+        this.add(item);
+      }
+    });
   };
   expect(a_set.update).toBeInstanceOf(Function);
   a_set = new Set([1, 2]);
   a_set.update([2, 1, 3, 4]);
+  expect(a_set).toEqual(new Set([4, 3, 2, 1]));
+  a_set = new Set([1, 2]);
+  a_set.update([2, 1], [3, 4]);
   expect(a_set).toEqual(new Set([4, 3, 2, 1]));
 });
