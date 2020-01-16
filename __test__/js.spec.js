@@ -47,7 +47,7 @@ it(`list(array) in a Boolean context`, () => {
   expect([]).toBeTruthy();
 });
 
-it(`Set`, () => {
+it(`The Set object lets you store unique values of any type`, () => {
   let a_set = new Set([1, 2]);
   expect(a_set).toEqual(new Set([1, 2]));
   a_set = new Set([1, 2, { a: 1 }]);
@@ -69,4 +69,38 @@ it(`Set`, () => {
     .not.toStrictEqual({ obj: 1 });
   expect(child).toBeInstanceOf(Parent);
   expect({ obj: 1 }).not.toBeInstanceOf(Parent);
+  expect(typeof child)
+    .toBe(typeof { obj: 1 })
+    .toBe("object");
+});
+
+it(`Py: There are two different ways to add values to an existing set: the add() method, and the update() method.`, () => {
+  let a_set = new Set([1, 2]);
+  a_set.add(4);
+  expect(a_set).toEqual(new Set([1, 2, 4]));
+  expect(a_set.size).toBe(3);
+  a_set.add(2);
+  expect(a_set).toEqual(new Set([1, 2, 4]));
+  a_set.add([2, 4, 6]);
+  expect(a_set).toEqual(new Set([1, 2, 4, [2, 4, 6]]));
+  a_set = new Set([1, 2, 4]);
+  [2, 4, 6].map(item => a_set.add(item));
+  expect(a_set)
+    .toEqual(new Set([1, 2, 4, 6]))
+    .toEqual(new Set([2, 1, 4, 6]));
+  expect(a_set)
+    .toBeInstanceOf(Set)
+    .toBeInstanceOf(Object)
+    .not.toBeInstanceOf(Function);
+  expect(Set.prototype)
+    .toBeInstanceOf(Object)
+    .toHaveProperty("add")
+    .not.toHaveProperty("update");
+  Set.prototype.update = function(arr) {
+    arr.map(item => this.add(item));
+  };
+  expect(a_set.update).toBeInstanceOf(Function);
+  a_set = new Set([1, 2]);
+  a_set.update([2, 1, 3, 4]);
+  expect(a_set).toEqual(new Set([4, 3, 2, 1]));
 });
