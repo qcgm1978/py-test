@@ -46,3 +46,27 @@ it(`remote list(array) items`, () => {
 it(`list(array) in a Boolean context`, () => {
   expect([]).toBeTruthy();
 });
+
+it(`Set`, () => {
+  let a_set = new Set([1, 2]);
+  expect(a_set).toEqual(new Set([1, 2]));
+  a_set = new Set([1, 2, { a: 1 }]);
+  expect(a_set).toEqual(new Set([1, 2, { a: 1 }]));
+  expect(a_set).toStrictEqual(new Set([1, 2, { a: 1 }]));
+  expect(a_set == new Set([1, 2, { a: 1 }])).toBeFalsy();
+  const obj = {};
+  expect(obj).toEqual({});
+  expect(obj).toStrictEqual({});
+  expect(obj == {}).toBeFalsy();
+  class Parent {
+    constructor() {
+      this.obj = 1;
+    }
+  }
+  const child = new Parent();
+  expect(child)
+    .toEqual({ obj: 1 })
+    .not.toStrictEqual({ obj: 1 });
+  expect(child).toBeInstanceOf(Parent);
+  expect({ obj: 1 }).not.toBeInstanceOf(Parent);
+});
