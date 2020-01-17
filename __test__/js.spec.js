@@ -113,3 +113,39 @@ it(`Py: There are two different ways to add values to an existing set: the add()
   a_set.update([2, 1], [3, 4]);
   expect(a_set).toEqual(new Set([4, 3, 2, 1]));
 });
+
+it(`Py:There are three ways to remove individual values from a set. The first two, discard() and remove(), have one subtle difference.`, () => {
+  let a_set = new Set([1, 3, 6, 10, 15, 21, 28, 36, 45]);
+  a_set.delete(10);
+  expect(a_set).toEqual(new Set([1, 3, 6, 15, 21, 28, 36, 45]));
+  a_set.delete(10);
+  expect(a_set).toEqual(new Set([1, 3, 6, 15, 21, 28, 36, 45]));
+  expect(Set.prototype).not.toHaveProperty("remove");
+  class KeyError extends Error {
+    constructor(type = "python", ...params) {
+      // Pass remaining arguments (including vendor specific ones) to parent constructor
+      super(...params);
+
+      // Maintains proper stack trace for where our error was thrown (only available on V8)
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, KeyError);
+      }
+
+      this.name = "KeyError";
+      // Custom debugging information
+      this.type = type;
+      this.date = new Date();
+    }
+  }
+  Set.prototype.remove = function(val) {
+    if (this.has(val)) {
+      this.delete(val);
+    } else {
+      throw new KeyError("python style error", "mock py KeyError");
+    }
+  };
+  a_set = new Set([1, 3, 6, 10]);
+  a_set.delete(10);
+  expect(a_set.remove.bind(a_set, 10)).toThrow();
+  expect(a_set.remove.bind(a_set, 10)).toThrowError(KeyError);
+});
