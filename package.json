@@ -11,7 +11,7 @@
       "jest-chain"
     ],
     "transform": {
-      "^.+\\.tsx?$":"ts-jest"
+      "^.+\\.tsx?$": "ts-jest"
     },
     "moduleFileExtensions": [
       "ts",
@@ -23,7 +23,8 @@
     ]
   },
   "dependencies": {
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "ts-jest": "^25.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",
