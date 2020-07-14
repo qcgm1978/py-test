@@ -10,20 +10,20 @@ from app.humansize import approximate_size  # pylint: disable=import-error
 class TDDDiveIntoPython3(unittest.TestCase):
 
     def test_current(self):
-        self.assertEqual(os.getcwd(), '/Users/philipp/py-test')
-        os.chdir('/Users/philipp/Liyongle')
-        self.assertEqual(os.getcwd(), '/Users/philipp/Liyongle')
+        self.assertEqual(os.getcwd(), '/Users/zhanghongliang/Documents/py-test')
+        os.chdir('/Users/zhanghongliang/Documents/Liyongle')
+        self.assertEqual(os.getcwd(), '/Users/zhanghongliang/Documents/Liyongle')
 
     def test_filename_dirname(self):
-        path = os.path.join('/Users/philipp/', 'test.py')
-        self.assertEqual(path, '/Users/philipp/test.py')
-        path = os.path.join('/Users/philipp', 'test.py')
-        self.assertEqual(path, '/Users/philipp/test.py')
+        path = os.path.join('/Users/zhanghongliang/Documents/', 'test.py')
+        self.assertEqual(path, '/Users/zhanghongliang/Documents/test.py')
+        path = os.path.join('/Users/zhanghongliang/Documents', 'test.py')
+        self.assertEqual(path, '/Users/zhanghongliang/Documents/test.py')
         path = os.path.expanduser('~')
-        self.assertEqual(path, '/Users/philipp')
+        self.assertEqual(path, '/Users/zhanghongliang')
         path = os.path.join(os.path.expanduser(
             '~'), 'test-dir', 'test-dir2', 'test.py')
-        self.assertEqual(path, '/Users/philipp/test-dir/test-dir2/test.py')
+        self.assertEqual(path, '/Users/zhanghongliang/test-dir/test-dir2/test.py')
         pathname = '/Users/pilgrim/diveintopython3/examples/humansize.py'
         path_split = os.path.split(pathname)
         self.assertEqual(
@@ -35,8 +35,8 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertEqual(shortname,'humansize')
         self.assertEqual(extension,'.py')
     def test_lst_dir(self):
-        os.chdir('/Users/philipp/py-test')
-        self.assertEqual(os.getcwd(),'/Users/philipp/py-test')
+        os.chdir('/Users/zhanghongliang/Documents/py-test')
+        self.assertEqual(os.getcwd(),'/Users/zhanghongliang/Documents/py-test')
         import glob
         a_list=glob.glob('examples/*.xml')
         self.assertEqual(a_list,[])
@@ -47,7 +47,7 @@ class TDDDiveIntoPython3(unittest.TestCase):
         self.assertTrue(len(a_list)>0)
 
     def test_metadata(self):
-        self.assertEqual(os.getcwd(),'/Users/philipp/py-test/test/comprehensions')
+        self.assertEqual(os.getcwd(),'/Users/zhanghongliang/Documents/py-test/test/comprehensions')
         metadata=os.stat('test_current_directory.py')
         self.assertEqual(type(metadata.st_mtime),float)
         import time
@@ -57,7 +57,7 @@ class TDDDiveIntoPython3(unittest.TestCase):
         size=approximate_size(metadata.st_size)
         self.assertEqual(type(size),str)
         real_path=os.path.realpath('test_current_directorh.py')
-        self.assertEqual(real_path,'/Users/philipp/py-test/test/comprehensions/test_current_directorh.py')
+        self.assertEqual(real_path,'/Users/zhanghongliang/Documents/py-test/test/comprehensions/test_current_directorh.py')
 
 if __name__ == '__main__':
     unittest.main()
