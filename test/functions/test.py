@@ -24,6 +24,8 @@ class TDDDiveIntoPython3(unittest.TestCase):
        [ 0.41433436],
        [ 0.32511054],
        [ 0.44378327]]
+        print val1
+        print actual
         self.assertEqual((val1-actual).all(),1)
         self.assertLess((val1-actual)[0],1e-8)
     

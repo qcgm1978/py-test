@@ -32,7 +32,8 @@
     "jest-chain": "^1.1.2"
   },
   "scripts": {
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "py":"alias python=python3"
   },
   "repository": {
     "type": "git",
