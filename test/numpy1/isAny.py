@@ -5,8 +5,9 @@ currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from utilities.getArr import getArr
+import numpy as np
 def isAny(a,*args,**kwargs):
-    axis=0
+    axis=1
     for key, value in kwargs.items(): 
         axis=value 
     if args:
@@ -17,6 +18,10 @@ def isAny(a,*args,**kwargs):
         a=a[0]
         aList=getArr(len(a),len(b))
         for i in range(len(a)) :
-            if(a[i]==b[i]):
-                return 1
-        return 0
+            if axis:
+                eql=a[i]==b[i]
+                if(eql):
+                    return 1
+            else:
+                aList[i]=a[i] or b[i]
+        return 0 if axis else np.array(aList)
