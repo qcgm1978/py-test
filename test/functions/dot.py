@@ -33,7 +33,15 @@ class NumpyTest(unittest.TestCase):
         b = [[4, 1], [2, 2]]
         c = dotTwo(a, b)
         d = np.dot(a, b)
-        self.assertEqualAll([(c - d).any(),  0])
+        self.assertEqualAll([(c - d).any(), 0])
+        a = np.arange(3 * 4 * 5 * 6).reshape((3, 4, 5, 6))
+        # print(a)
+        b = np.arange(3 * 4 * 5 * 6)[::-1].reshape((5, 4, 6, 3))
+        ab=np.dot(a, b)
+        print(len(ab))
+        # ab1=dotTwo(a,b)
+
+        ab[2, 3, 2, 1, 2, 2]
 
 
 if __name__ == "__main__":
