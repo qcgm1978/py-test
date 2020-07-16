@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 
+from isAny import isAny
 
 class NumpyTest(unittest.TestCase):
     def testAny(self):
@@ -11,11 +12,16 @@ class NumpyTest(unittest.TestCase):
         the_exception = cm.exception
         error =  "unsupported operand type(s) for -: 'list' and 'list'"
         self.assertEqual(str(the_exception), error)
+        self.assertTrue(isAny(a,b))
         bool=np.any([[True, False], [True, True]])
+        bool1=isAny([[True, False], [True, True]])
         self.assertEqual(bool,1)
+        self.assertEqual(bool1,1)
         arr=np.any([[True, False], [False, False]], axis=0)
+        arr1=isAny([[True, False], [False, False]], axis=0)
         self.assertEqual(type(arr),np.ndarray)
         self.assertEqual((arr-[True, False]).any(),0)
+        self.assertEqual((arr1-[True, False]).any(),0)
         self.assertTrue(np.any([-1, 0, 5]))
         self.assertTrue(np.any(np.nan))
         o=np.array(False)
