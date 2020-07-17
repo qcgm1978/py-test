@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
-
+import sys
+print(sys.version)
 from isAny import isAny
 
 class NumpyTest(unittest.TestCase):
@@ -20,14 +21,21 @@ class NumpyTest(unittest.TestCase):
         arr=np.any([[True, False], [False, False]], axis=0)
         arr1=isAny([[True, False], [False, False]], axis=0)
         self.assertEqual(type(arr),np.ndarray)
-        self.assertEqual((arr-[True, False]).any(),0)
-        self.assertEqual((arr1-[True, False]).any(),0)
+        self.assertEqual((arr ^ [True, False]).any(),0)
+        self.assertEqual((arr1 ^ [True, False]).any(),0)
         self.assertTrue(np.any([-1, 0, 5]))
         self.assertTrue(np.any(np.nan))
+        self.assertTrue(isAny(np.nan))
         o=np.array(False)
+        o1=np.array(False)
         self.assertFalse(o)
         z=np.any([-1, 4, 5], out=o)#Alternate output array in which to place the result.
+        z1=isAny([-1, 4, 5])
+        self.assertTrue(z1)
+        z1=isAny([-1, 4, 5], out='o1')
         self.assertTrue(o)
+        # self.assertTrue(o1)
+        self.assertTrue(z1)
         self.assertTrue(z)
         self.assertIs(o,z)
         self.assertEqual(type(id(o)),int)
