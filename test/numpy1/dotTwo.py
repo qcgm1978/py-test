@@ -15,7 +15,7 @@ def dotTwo(a, b):
     isComplex = isComplexNum(a)
     a = getList(a)
     b = getList(b)
-    if type(a) == list:
+    if hasattr(a,'__len__'):
         total = 0
         if isComplex:
             for i in range(len(a)):
