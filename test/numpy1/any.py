@@ -14,7 +14,7 @@ class NumpyTest(unittest.TestCase):
         error =  "unsupported operand type(s) for -: 'list' and 'list'"
         self.assertEqual(str(the_exception), error)
         self.assertTrue(isAny(a,b))
-        bool=np.any([[True, False], [True, True]])
+        bool=np.any([[True, False,], [True, True]])
         bool1=isAny([[True, False], [True, True]])
         self.assertEqual(bool,1)
         self.assertEqual(bool1,1)
