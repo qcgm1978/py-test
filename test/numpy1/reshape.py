@@ -9,16 +9,10 @@ sys.path.append(parentdir)
 sys.path.append("/Users/zhanghongliang/Documents/py-test")
 
 import numpy as np  # pylint: disable=import-error
-
-print(sys.version)
+import others.mock
 
 
 class NumpyTest(unittest.TestCase):
-    def setUp(self):
-        def assertEqualAll(arr):
-            return all(v == arr[0] for v in arr)
-
-        self.assertEqualAll = assertEqualAll
 
     def testReshape(self):
         a = np.zeros((10, 2))

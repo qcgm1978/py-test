@@ -7,7 +7,10 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from utilities.getArr import getArr
 class TestIterate(unittest.TestCase):
-    def setUp(self):
+    def setUp(self,extras_require=dict(
+        test=['testfixtures'],
+        )
+    ):
         self.list=[1, 3, 5, 7, 9] 
         self.aList=[0 for x in range(len(self.list))]
     def testLoop(self):

@@ -10,19 +10,9 @@ sys.path.append("/Users/zhanghongliang/Documents/py-test")
 
 from dotTwo import dotTwo
 import numpy as np  # pylint: disable=import-error
-
-print(sys.version)
-
+import others.mock
 
 class NumpyTest(unittest.TestCase):
-    def setUp(self):
-        def assertEqualAll(*args):
-            ret = all(v == args[0] for v in args)
-            if not ret:
-                ret=str(ret)+' is not true'
-                raise AssertionError(ret)
-
-        self.assertEqualAll = assertEqualAll
 
     def test_dot(self):
         dot = np.dot(3, 4)

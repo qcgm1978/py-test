@@ -10,19 +10,8 @@ sys.path.append("/Users/zhanghongliang/Documents/py-test")
 
 import numpy as np  # pylint: disable=import-error
 from getRavel import getRavel
+import others.mock
 class NumpyTest(unittest.TestCase):
-    def setUp(self):
-        def assertEqualAll(*args):
-            for i in range(len(args)):
-                v=args[i]
-                if v != args[0]:
-                    wrong = str(v)
-                    first = str(args[0])
-                    ret=f"The {i}th arg {wrong} is not equal to the first arg {first}"
-                    raise AssertionError(ret)
-
-        self.assertEqualAll = assertEqualAll
-
     def testFlatten(self):
         x = np.array([[1, 2, 3], [4, 5, 6]])
         a=np.ravel(x).tolist()
