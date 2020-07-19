@@ -29,13 +29,13 @@ class TDDDiveIntoPython3(unittest.TestCase):
         # print(val1.tolist())
         alist = (val - val1).tolist()
         # print(alist)
+        fact = [R(v[0], 8) for v in alist]
         actual = [
             -0.2896346,
             -0.4064693,
             0.66847844,
             0.54833631,
         ]
-        fact = [R(v[0], 8) for v in alist]
         compare(fact, actual)
 
 
