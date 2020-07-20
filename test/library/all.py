@@ -21,5 +21,12 @@ class TDDDiveIntoPython3(unittest.TestCase):
         # empty iterable
         l = []
         self.assertTrue(all(l))
+        actual = [
+            -0.2896346,
+            -0.4064693,
+            0.66847844,
+            0.54833631,
+        ]
+        self.assertTrue(all(x < 1 and x>-1 for x in actual))
 if __name__ == '__main__':
     unittest.main()

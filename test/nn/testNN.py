@@ -33,7 +33,7 @@ class TDDNN(unittest.TestCase):
             0.54833631,
         ]
         compare(fact, actual)
-
+        self.assertTrue(all(x<1 for x in val))
 
 if __name__ == "__main__":
     unittest.main()
