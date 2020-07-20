@@ -11,7 +11,6 @@ import logging
 
 import others.mock
 from testfixtures import compare, RoundComparison as R
-from decimal import Decimal
 
 
 class TDDNN(unittest.TestCase):
@@ -32,6 +31,7 @@ class TDDNN(unittest.TestCase):
             0.66847844,
             0.54833631,
         ]
+        compare(True, True)
         compare(fact, actual)
         self.assertTrue(all(x<1 for x in val))
 
