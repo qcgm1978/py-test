@@ -5,8 +5,7 @@ import sys
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
-from app.humansize import approximate_size  # pylint: disable=import-error
-from app.nn import nn  # pylint: disable=import-error
+from nn import nn  # pylint: disable=import-error
 import numpy as np
 import logging
 
@@ -15,11 +14,8 @@ from testfixtures import compare, RoundComparison as R
 from decimal import Decimal
 
 
-class TDDDiveIntoPython3(unittest.TestCase):
-    def test_current(self):
-        size = approximate_size(4000, a_kilobyte_is_1024_bytes=False)
-        self.assertEqual(size, "4.0 KB")
-
+class TDDNN(unittest.TestCase):
+   
     def test_nn(self):
         val = nn()
         val1 = nn(1)
