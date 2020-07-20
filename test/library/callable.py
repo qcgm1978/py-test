@@ -7,17 +7,22 @@ class TDDcallable(unittest.TestCase):
         self.assertFalse(callable(Ellipsis))
         self.assertRaises(TypeError, Ellipsis)
         class Person:
-            name = 'Adam'
-            # def __call__(self):
-                # 1
+            Ellipsis
         self.assertTrue(callable(Person))
         p = Person()
         self.assertFalse(callable(p))
         Person.__call__=lambda:2
         self.assertTrue(callable(p))
+        self.assertRaises(TypeError,p.__call__)
         p.__call__ = lambda: 1
         self.assertEqual(p.__call__(),1)
         self.assertTrue(callable(p))
+        class Person:
+            def __call__(self):
+                return 2
+        p = Person()
+        self.assertTrue(callable(p))
+        self.assertEqual(p.__call__(),2)
 
 if __name__ == '__main__':
     unittest.main()
