@@ -17,7 +17,7 @@ class TDDdir(unittest.TestCase):
                 return ['area', 'perimeter', 'location']
         Shape.__dir__=dir1
         self.assertEqual(s.__dir__(),['area', 'perimeter', 'location'])
-        self.assertCountEqual(dir(s),['area', 'perimeter', 'location'])
+        self.assertEqual(dir(s),['area', 'location', 'perimeter'])
 
 if __name__ == '__main__':
     unittest.main()
