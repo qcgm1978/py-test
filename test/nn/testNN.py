@@ -7,17 +7,17 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 from nn import nn  # pylint: disable=import-error
 import numpy as np
-import logging
 
 import others.mock
 from testfixtures import compare, RoundComparison as R
 
 
 class TDDNN(unittest.TestCase):
-   
     def test_nn(self):
-        val = nn()
-        val1 = nn(1)
+        a = nn()
+        val = a["l1"]
+        b = nn(1)
+        val1 = b["l1"]
         self.assertEqual(type(val), np.ndarray)
         self.assertEqualAll(len(val), len(val1), 4)
         # print(val.tolist())
@@ -33,7 +33,11 @@ class TDDNN(unittest.TestCase):
         ]
         compare(True, True)
         compare(fact, actual)
-        self.assertTrue(all(x<1 for x in val))
+        self.assertTrue(all(x < 1 for x in val))
+        e=a['l1_error']
+        e1=b['l1_error']
+        print(e)
+        # print(e1)
 
 if __name__ == "__main__":
     unittest.main()

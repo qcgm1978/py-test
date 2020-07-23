@@ -33,7 +33,8 @@
   },
   "scripts": {
     "test": "jest --watch",
-    "py":"alias python=python3"
+    "py":"alias python=python3",
+    "create":"python3 test/others/create-with-arg.py attr_prop test/others/"
   },
   "repository": {
     "type": "git",
