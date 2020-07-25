@@ -44,15 +44,15 @@ class TDDgenerators(unittest.TestCase):
             while i < maximum:
                 val = (yield i)
                     # If value provided, change counter
-                if val is not None:
-                    i = val
-                else:
+                if val is  None:
                     i += 1
+                else:
+                    i = val
         it = counter(10)
         self.assertIsInstance(it,collections.Iterable)
         self.assertEqual(next(it),0)
         self.assertEqual(next(it),1)
-        it.send(8) 
+        it.send(8) #Values are sent into a generator by calling its send(value) method. This method resumes the generator’s code and the yield expression returns the specified value.
         self.assertEqual(next(it),9)
         self.assertRaises(StopIteration,lambda:next(it))
 if __name__ == '__main__':
