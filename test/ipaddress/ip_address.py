@@ -1,4 +1,9 @@
-import re
+import re,itertools
+def get_hostmask(ip):
+    version=get_version(ip).version
+    netmask= '255.255.255.0' if version==4 else 'ffff:ffff:ffff:ffff:ffff:ffff::'
+    hostmask = '0.0.0.255' if version == 4 else '::ffff:ffff'
+    return {'netmask':netmask,'hostmask':hostmask}
 def getHosts(ip):
     pre = ip.split('/')[0][:-1]
     l=[]
@@ -7,20 +12,38 @@ def getHosts(ip):
     return l
 def get_num_addresses(net):
         # each part of an IP address can have a value between 0-255. So the fourth part of the IP address permits for 256 different addresses (zero up to 255) that can be used for computers, IP phones, routers, laptops, printers and other devices.
-    ver=get_version(net)
-    return 2**8 if ver==4 else 2**32
-def get_version(integer):
-    if isinstance(integer,int):
-        binStr = bin(integer)[2:]
-        length = len(binStr)
-        isIpv4 = length <= 32
-        return 4 if isIpv4 else 6
-    else:
-        return 4 if '.' in integer else 6
+    version=get_version(net).version
+    return 2**8 if version==4 else 2**32
+class get_version(object):
+    def addZero(self,string):
+        length = 4 - len(string)
+        return ''.join(list(itertools.repeat('0',length)))+string
+    def __init__(self, ip):
+        self.compressed = ip.replace(':0', ':')
+        prepost=ip.split('/')
+        l = prepost[0].split(':')
+        if '' in l:
+            l.remove('')
+        fourZero=8-len(l)
+        for i in range(fourZero):
+            l.insert(-1, '0000')
+        l = list(map(self.addZero, l))
+        pre=':'.join(l)
+        if len(prepost) == 2:
+            self.exploded = pre + '/' + prepost[1]
+        else:
+            self.exploded =pre
+        if isinstance(ip,int):
+            binStr = bin(ip)[2:]
+            length = len(binStr)
+            isIpv4 = length <= 32
+            self.version= 4 if isIpv4 else 6
+        else:
+            self.version = 4 if '.' in ip else 6
 
-def ip_address(integer,isIpv6=False,isNetwork=False):
+def ip_address(ip,isIpv6=False,isNetwork=False):
     #  An IP address is a 32-bit binary address
-    binStr = bin(integer)[2:]
+    binStr = bin(ip)[2:]
     #  "dotted decimal" format
     ip = ''
     # This 32-bit address is subdivided into four 8-bit segments called octets.
