@@ -1,4 +1,14 @@
 import re
+def getHosts(ip):
+    pre = ip.split('/')[0][:-1]
+    l=[]
+    for i in range(254):
+        l.append(pre + str(i+1))
+    return l
+def get_num_addresses(net):
+        # each part of an IP address can have a value between 0-255. So the fourth part of the IP address permits for 256 different addresses (zero up to 255) that can be used for computers, IP phones, routers, laptops, printers and other devices.
+    ver=get_version(net)
+    return 2**8 if ver==4 else 2**32
 def get_version(integer):
     if isinstance(integer,int):
         binStr = bin(integer)[2:]
