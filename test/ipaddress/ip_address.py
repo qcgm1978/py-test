@@ -26,7 +26,7 @@ def ip_address(integer,isIpv6=False):
     ret = ip[0:-1].replace('0x', '')
     # Swap Binary substring 
     # Using translate() 
-    ret = ret.replace('0:', ':').replace(':::', ':').replace('::', ':')
+    ret = ret.replace('0:', ':').replace(':::', ':').replace('::', ':').replace(':0','::')
     if isIpv6:
-            ret+='/'+str(length)
+            ret+='/'+str(length if length <= 32 else 128)
     return ret

@@ -16,9 +16,12 @@ class TDDdefine_networks(unittest.TestCase):
         host=ipaddress.ip_network(integer)
         network=ip_address(integer,isIpv6=True)
         self.assertEqual(host,ipaddress.IPv4Network('192.0.2.0/32'))
-        self.assertEqual(network,('192.0.2.0/32'))
-        host1=ipaddress.ip_network(42540766411282592856903984951653826560)
+        self.assertEqual(network, ('192.0.2.0/32'))
+        integer1=42540766411282592856903984951653826560
+        host1=ipaddress.ip_network(integer1)
+        host2 = ip_address(integer1,isIpv6=True)
         self.assertEqual(host1,ipaddress.IPv6Network('2001:db8::/128'))
+        self.assertEqual(host2,('2001:db8::/128'))
 if __name__ == '__main__':
     unittest.main()
 
