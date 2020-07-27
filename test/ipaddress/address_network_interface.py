@@ -19,7 +19,7 @@ class TDDaddress_network_interface(unittest.TestCase):
         i2 = ip_address(integer1)
         print(i2)
         self.assertEqual(i1, ipaddress.IPv6Address('2001:db8::1'))
-        self.assertNotEqual(i2,'2001:db8::1')
+        self.assertEqual(i2,'2001:db8::1')
     def test_small_int(self):
         i = ipaddress.ip_address(1)
         i3=ip_address(1)
