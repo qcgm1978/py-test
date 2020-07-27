@@ -1,4 +1,13 @@
 import re
+def get_version(integer):
+    if isinstance(integer,int):
+        binStr = bin(integer)[2:]
+        length = len(binStr)
+        isIpv4 = length <= 32
+        return 4 if isIpv4 else 6
+    else:
+        return 4 if '.' in integer else 6
+
 def ip_address(integer,isIpv6=False,isNetwork=False):
     #  An IP address is a 32-bit binary address
     binStr = bin(integer)[2:]
@@ -6,8 +15,9 @@ def ip_address(integer,isIpv6=False,isNetwork=False):
     ip = ''
     # This 32-bit address is subdivided into four 8-bit segments called octets.
     length = len(binStr)
-    isIpv4=length <= 32
-    if isIpv4 and not isIpv6 :
+    isIpv4 = length <= 32
+    isVersion4=isIpv4 and not isIpv6
+    if isVersion4 :
         zeroLen = 32 - length
         zeroStr = '0' * zeroLen
         binStr=zeroStr+binStr
