@@ -22,7 +22,15 @@ class TDDnetwork_list(unittest.TestCase):
         self.assertEqual(net6_[1],('2001:db8::1'))
         self.assertEqual(net6_[2],('2001:db8::2'))
         self.assertEqual(net6[-1],ipaddress.IPv6Address('2001:db8::ffff:ffff'))
-        self.assertEqual(net6_[-1],('2001:db8::ffff:ffff'))
+        self.assertEqual(net6_[-1], ('2001:db8::ffff:ffff'))
+    def test_containment_test(self):
+        addr4 = ipaddress.ip_address('192.0.2.1')
+        addr4_ = get_ipaddress.ip_address('192.0.2.1')
+        print(addr4_)
+        self.assertTrue(addr4 in ipaddress.ip_network('192.0.2.0/24') )
+        self.assertTrue(addr4_ in get_ipaddress.ip_network('192.0.2.0/24') )
+        self.assertFalse(addr4 in ipaddress.ip_network('192.0.3.0/24') )
+        self.assertFalse(addr4_ in get_ipaddress.ip_network('192.0.3.0/24') )
 if __name__ == '__main__':
     unittest.main()
 

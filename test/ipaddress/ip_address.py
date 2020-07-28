@@ -26,6 +26,40 @@ def get_num_addresses(net):
     version = get_ipaddress(net).version
     return 2 ** 8 if version == 4 else 2 ** 32
 
+def ip_address(ip, isIpv6=False, isNetwork=False):
+    if isinstance(ip, str):
+        return ip
+    #  An IP address is a 32-bit binary address
+    binStr = bin(ip)[2:]
+    #  "dotted decimal" format
+    ip = ""
+    # This 32-bit address is subdivided into four 8-bit segments called octets.
+    length = len(binStr)
+    isIpv4 = length <= 32
+    isVersion4 = isIpv4 and not isIpv6
+    if isVersion4:
+        zeroLen = 32 - length
+        zeroStr = "0" * zeroLen
+        binStr = zeroStr + binStr
+        for i in range(4):
+            # The four decimal values (4x8 = 32 bits) are then separated with periods
+            start = 8 * i
+            #  the segments of a dotted decimal addresses are decimal numbers with a range from 0 — 255.
+            ip += str(int(binStr[start : start + 8], 2)) + "."
+
+    else:
+        zeroLen = 128 - length
+        zeroStr = "0" * zeroLen
+        binStr = zeroStr + binStr
+        for i in range(8):
+            start = 16 * i
+            ip += str(hex(int(binStr[start : start + 16], 2))) + ":"
+        # Part of the IP address is used for "network ID, and the rest of the address is used for the "host ID."
+    ret = ip[0:-1].replace("0x", "")
+    ret = ret.replace("0:", ":").replace("::", ":").replace("::", ":")
+    if isNetwork:
+        ret += "/" + str(length if length <= 32 else 128)
+    return ret
 
 class get_ipaddress(object):
     
@@ -77,37 +111,5 @@ class get_ipaddress(object):
             self.version = 4 if isIpv4 else 6
         else:
             self.version = 4 if "." in ip else 6
+    ip_address=ip_address
 
-
-def ip_address(ip, isIpv6=False, isNetwork=False):
-    #  An IP address is a 32-bit binary address
-    binStr = bin(ip)[2:]
-    #  "dotted decimal" format
-    ip = ""
-    # This 32-bit address is subdivided into four 8-bit segments called octets.
-    length = len(binStr)
-    isIpv4 = length <= 32
-    isVersion4 = isIpv4 and not isIpv6
-    if isVersion4:
-        zeroLen = 32 - length
-        zeroStr = "0" * zeroLen
-        binStr = zeroStr + binStr
-        for i in range(4):
-            # The four decimal values (4x8 = 32 bits) are then separated with periods
-            start = 8 * i
-            #  the segments of a dotted decimal addresses are decimal numbers with a range from 0 — 255.
-            ip += str(int(binStr[start : start + 8], 2)) + "."
-
-    else:
-        zeroLen = 128 - length
-        zeroStr = "0" * zeroLen
-        binStr = zeroStr + binStr
-        for i in range(8):
-            start = 16 * i
-            ip += str(hex(int(binStr[start : start + 16], 2))) + ":"
-        # Part of the IP address is used for "network ID, and the rest of the address is used for the "host ID."
-    ret = ip[0:-1].replace("0x", "")
-    ret = ret.replace("0:", ":").replace("::", ":").replace("::", ":")
-    if isNetwork:
-        ret += "/" + str(length if length <= 32 else 128)
-    return ret
