@@ -23,7 +23,19 @@ class TDD_fails_detail(unittest.TestCase):
         self.raises(func=lambda:ipaddress.ip_network("192.168.0.1/64"),errorType=ValueError,error="'192.168.0.1/64' does not appear to be an IPv4 or IPv6 network")
         self.raises(func=lambda:get_ipaddress.ip_network("192.168.0.1/64"),errorType=ValueError,error="'192.168.0.1/64' does not appear to be an IPv4 or IPv6 network")
         self.raises(func=lambda:ipaddress.IPv4Network("192.168.0.1/64"),error="'64' is not a valid netmask",errorType=ipaddress.NetmaskValueError)
-        self.raises(func=lambda:get_ipaddress.IPv4Network("192.168.0.1/64"),error="'64' is not a valid netmask",errorType=get_ipaddress.NetmaskValueError)
+        self.raises(func=lambda: get_ipaddress.IPv4Network("192.168.0.1/64"), error="'64' is not a valid netmask", errorType=get_ipaddress.NetmaskValueError)
+    def test_parent_err(self):
+        address="192.168.0.1/64"
+        try:
+            network = ipaddress.IPv4Network(address)
+        except ValueError:
+            print('address/netmask is invalid for IPv4:', address)
+        try:
+            network = get_ipaddress.IPv4Network(address)
+        except ValueError:
+            print('address/netmask is invalid for IPv4:', address)
+        self.assertIn(ValueError,ipaddress.NetmaskValueError.__bases__)
+        self.assertIn(ValueError,get_ipaddress.NetmaskValueError.__bases__)
 
 if __name__ == '__main__':
     unittest.main()

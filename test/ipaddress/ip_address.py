@@ -31,7 +31,7 @@ class AddressValueError(Exception):
         self.ip = ip
         self.message = "Octet %s (> %s) not permitted in '%s'" % (l[0],MAX_FIELD, ip)
         super().__init__(self.message)
-class NetmaskValueError(Exception):
+class NetmaskValueError(ValueError):
     """a netmask, where the address description is either a string, a 32-bits integer, a 4-bytes packed integer
 
     Attributes:
