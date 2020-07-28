@@ -1,4 +1,4 @@
-import re, itertools
+import re, itertools,socket, struct
 
 
 def get_hostmask(ip):
@@ -62,6 +62,7 @@ def ip_address(ip, isIpv6=False, isNetwork=False):
     return ret
 
 class get_ipaddress(object):
+
     class ip_network(object):
         # return getHosts(ip,-1,255)
         def __init__(self, ip):
@@ -85,7 +86,7 @@ class get_ipaddress(object):
         length = 4 - len(string)
         return "".join(list(itertools.repeat("0", length))) + string
 
-    def __init__(self, ip):
+    def __init__(self, ip=''):
         self.compressed = ip.replace(":0", ":")
         prepost = ip.split("/")
         l = prepost[0].split(":")
@@ -107,5 +108,31 @@ class get_ipaddress(object):
             self.version = 4 if isIpv4 else 6
         else:
             self.version = 4 if "." in ip else 6
-    ip_address=ip_address
+    class ip_address(object):
+        def __init__(self,ip):
+                super().__init__()
+                self.ip=ip
+        def __str__(self):
+            return self.ip
+        def __int__(self):
+            # l = self.ip.split('.')
+            # l = list(map(self.addBits, l))
+            # ip=''.join(l)
+            # return int(ip,2)
+            return self.ip2long(self.ip)
+        def __lt__(self, other):
+            return self.ip < other.ip
+        def ip2long(self,ip):
+            """
+            Convert an IP string to long
+            """
+            packedIP = socket.inet_aton(ip)
+            return struct.unpack("!L", packedIP)[0]
+        def addBits(self, field):
+            field=bin(int(field))[2:]
+            length=len(field)
+            zeroLen = 4 - length
+            zeroStr = "0" * zeroLen if zeroLen>0 else ''
+            return zeroStr + field
+        # return ip_address(ip)
 
