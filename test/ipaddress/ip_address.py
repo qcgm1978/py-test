@@ -62,10 +62,6 @@ def ip_address(ip, isIpv6=False, isNetwork=False):
     return ret
 
 class get_ipaddress(object):
-    
-    
-    def __get__(self,index):
-        return self.getHost(index)
     class ip_network(object):
         # return getHosts(ip,-1,255)
         def __init__(self, ip):
