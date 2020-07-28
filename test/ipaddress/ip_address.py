@@ -1,10 +1,10 @@
 import re, itertools,socket, struct
 
-
+MAX_FIELD=255
 def get_hostmask(ip):
     version = get_ipaddress(ip).version
-    netmask = "255.255.255.0" if version == 4 else "ffff:ffff:ffff:ffff:ffff:ffff::"
-    hostmask = "0.0.0.255" if version == 4 else "::ffff:ffff"
+    netmask = "%s.%s.%s.0" % MAX_FIELD if version == 4 else "ffff:ffff:ffff:ffff:ffff:ffff::"
+    hostmask = "0.0.0.%s" % MAX_FIELD if version == 4 else "::ffff:ffff"
     return {"netmask": netmask, "hostmask": hostmask}
 
 
@@ -25,8 +25,43 @@ def get_num_addresses(net):
     # each part of an IP address can have a value between 0-255. So the fourth part of the IP address permits for 256 different addresses (zero up to 255) that can be used for computers, IP phones, routers, laptops, printers and other devices.
     version = get_ipaddress(net).version
     return 2 ** 8 if version == 4 else 2 ** 32
+class AddressValueError(Exception):
 
-def ip_address(ip, isIpv6=False, isNetwork=False):
+    def __init__(self, ip,l):
+        self.ip = ip
+        self.message = "Octet %s (> %s) not permitted in '%s'" % (l[0],MAX_FIELD, ip)
+        super().__init__(self.message)
+class NetmaskValueError(Exception):
+    """a netmask, where the address description is either a string, a 32-bits integer, a 4-bytes packed integer
+
+    Attributes:
+        ip -- network ip to validate
+    """
+
+    def __init__(self, ip,l):
+        self.ip = ip
+        self.message = "'%s' is not a valid netmask" % (l)
+        super().__init__(self.message)
+
+def hasError(ip,detail):
+    l = ip.split('.')
+    i = itertools.filterfalse(lambda x: int(x) < MAX_FIELD, l)
+    val=list(i)
+    if (len(val) > 0):
+        if detail:
+            raise AddressValueError(ip,val)
+        else:
+            raise ValueError("'%s' does not appear to be an IPv4 or IPv6 address" % ip)
+def hasNetworkError(ip,detail=False):
+    l = ip.split('/')
+    if (int(l[1]) >= 32):
+        if detail:
+            raise NetmaskValueError(ip,int(l[1]))
+        else:
+            raise ValueError("'%s' does not appear to be an IPv4 or IPv6 network" % ip)
+def ip_address(ip, isIpv6=False, isNetwork=False,detail=False):
+    if (hasError(ip,detail)):
+        return
     if isinstance(ip, str):
         return ip
     #  An IP address is a 32-bit binary address
@@ -67,6 +102,29 @@ class get_ipaddress(object):
         # return getHosts(ip,-1,255)
         def __init__(self, ip):
             self.ip = ip
+            if (hasNetworkError(ip)):
+                return
+        def getHost(self,i):
+            pre = self.ip.split("/")[0][:-1]
+            version = get_ipaddress(self.ip).version
+            maxNum=256 if version==4 else 0xffffffff+1
+            index=i if i>=0 else maxNum+i
+            if version==4:
+                    l=pre + str(index )
+            else:
+                post = hex(index)[2:]
+                if len(post) > 4:
+                    post=post[0:4]+':'+post[4:]
+                l=pre + post
+            return l
+        def __getitem__(self, x):
+            return self.getHost(x)
+    class IPv4Network(object):
+        # return getHosts(ip,-1,255)
+        def __init__(self, ip):
+            self.ip = ip
+            if (hasNetworkError(ip,detail=True)):
+                return
         def getHost(self,i):
             pre = self.ip.split("/")[0][:-1]
             version = get_ipaddress(self.ip).version
@@ -108,10 +166,16 @@ class get_ipaddress(object):
             self.version = 4 if isIpv4 else 6
         else:
             self.version = 4 if "." in ip else 6
+    class IPv4Address(object):
+        def __init__(self,ip):
+                super().__init__()
+                self.ip = ip
+                ip_address(ip,detail=True)
     class ip_address(object):
         def __init__(self,ip):
                 super().__init__()
-                self.ip=ip
+                self.ip = ip
+                ip_address(ip)
         def __str__(self):
             return self.ip
         def __int__(self):
@@ -134,5 +198,6 @@ class get_ipaddress(object):
             zeroLen = 4 - length
             zeroStr = "0" * zeroLen if zeroLen>0 else ''
             return zeroStr + field
-        # return ip_address(ip)
 
+    AddressValueError = AddressValueError
+    NetmaskValueError=NetmaskValueError
