@@ -14,8 +14,6 @@ import unittest
 class TDD_{0}(unittest.TestCase):
     def test_{1}(self):
         
-        self.assertTrue(True)
-
 if __name__ == '__main__':
     unittest.main()
 

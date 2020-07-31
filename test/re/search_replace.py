@@ -18,9 +18,28 @@ class TDD_SEARCH_REPLACE(unittest.TestCase):
         p1 = p.sub('-', 'abxd')
         # Empty matches are replaced only when they’re not adjacent to a previous empty match.
         self.assertEqual(p1,'-a-b--d-')
-        p = re.compile('section{ ( [^}]* ) }', re.VERBOSE)
+        p = re.compile('section{ ( .*? ) }', re.VERBOSE)
+        p_ = re.compile('section{ ( [^}]* ) }', re.VERBOSE)
         p1 = p.sub(r'subsection{\1}', 'section{First} section{second}')
+        p2 = p_.sub(r'subsection{\1}', 'section{First} section{second}')
         self.assertEqual(p1,'subsection{First} subsection{second}')
+        self.assertEqual(p2,'subsection{First} subsection{second}')
+    def test_replace(self):
+        p = re.compile('section{ (?P<name> [^}]* ) }', re.VERBOSE)
+        s=p.sub(r'subsection{\1}', 'section{First}')
+        self.assertEqual(s,'subsection{First}')
+        s1=p.sub(r'subsection{\g<1>}', 'section{First}')
+        self.assertEqual(s1,'subsection{First}')
+        s2=p.sub(r'subsection{\g<name>}', 'section{First}')
+        self.assertEqual(s2, 'subsection{First}')
+    def test_translate(self):
+        def hexrepl(match):
+            "Return the hex string for a decimal number"
+            value = int(match.group())
+            return hex(value) 
+        p = re.compile(r'\d+')
+        s=p.sub(hexrepl, 'Call 65490 for printing, 49152 for user code.')
+        self.assertEqual(s,'Call 0xffd2 for printing, 0xc000 for user code.')
 if __name__ == '__main__':
     unittest.main()
 
