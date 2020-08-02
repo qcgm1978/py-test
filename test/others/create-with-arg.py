@@ -12,15 +12,13 @@ def main():
             ','+sys.argv[2] if len(sys.argv)>=3 else ''
         ]
         ]
-    dirName = '/'.join(l[:-1]),
-    
+    dirName = '/'.join(l[:-1])
     # Create target directory & all intermediate directories if don't exists
     try:
-        # os.makedirs(dirName)    
         print("Directory " , dirName ,  " Created ")
+        os.makedirs(dirName)
     except FileExistsError:
-        # print("Directory " , dirName ,  " already exists")  
-        pass
+        print("Directory " , dirName ,  " already exists")
     for item in alist:
         f = open(sys.argv[1] + ".py", "w+")
         # for i in range(10):
