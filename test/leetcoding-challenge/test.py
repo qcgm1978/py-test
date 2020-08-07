@@ -5,6 +5,7 @@ from isHappy import Solution as Solution2
 from maxSubArray import Solution as Solution3
 from longestPalindrome import Solution as Solution4
 from convert import Solution as Solution5
+from reverse import Solution as Solution6
 class TDD_TEST(unittest.TestCase):
     def test_test(self):
         ins=Solution1()
@@ -59,7 +60,16 @@ class TDD_TEST(unittest.TestCase):
         self.assertEqual(s,"PAHNAPLSIIGYIR")
         self.assertEqual(s1,"PINALSIGYAHRPI")
         self.assertEqual(s2,"AB")
-        self.assertEqual(s3,"ABC")
+        self.assertEqual(s3, "ABC")
+    def test_reverse(self):
+        ins=Solution6()
+        n=ins.reverse(123)
+        n1=ins.reverse(-123)
+        n2=ins.reverse(120)
+        n3=ins.reverse(1534236469)
+        self.assertEqual(n,321)
+        self.assertEqual(n1,-321)
+        self.assertEqual(n3,0)
 if __name__ == '__main__':
     unittest.main()
 
