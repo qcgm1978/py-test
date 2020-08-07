@@ -1,5 +1,5 @@
 
-import unittest
+import unittest,collections
 from operator import itemgetter,attrgetter
 student_tuples = [
     ('john', 'A', 15),
@@ -20,7 +20,8 @@ student_objects = [
         ]
 class TDD_ASC_DES(unittest.TestCase):
     def test_asc_des(self):
-        s=sorted(student_tuples, key=itemgetter(2), reverse=True)
+        s = sorted(student_tuples, key=itemgetter(2), reverse=True)
+        self.assertIsInstance(s,collections.Iterable)
         self.assertEqual(s,[
     ('john', 'A', 15),
     ('jane', 'B', 12),
