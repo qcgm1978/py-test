@@ -6,6 +6,9 @@ from maxSubArray import Solution as Solution3
 from longestPalindrome import Solution as Solution4
 from convert import Solution as Solution5
 from reverse import Solution as Solution6
+from myAtoi import Solution as Solution7
+from isPalindrome import Solution as Solution8
+from isMatch import Solution as Solution9
 class TDD_TEST(unittest.TestCase):
     def test_test(self):
         ins=Solution1()
@@ -69,7 +72,49 @@ class TDD_TEST(unittest.TestCase):
         n3=ins.reverse(1534236469)
         self.assertEqual(n,321)
         self.assertEqual(n1,-321)
+        self.assertEqual(n3, 0)
+    def test_myAtoi(self):
+        ins=Solution7()
+        n=ins.myAtoi('42')
+        n1=ins.myAtoi("   -42")
+        n2=ins.myAtoi("4193 with words")
+        n3=ins.myAtoi("words and 987")
+        n4=ins.myAtoi("-91283472332")
+        n5=ins.myAtoi("  -0012a42")
+        n6=ins.myAtoi("2147483648")
+        n7=ins.myAtoi("+11e530408314")
+        self.assertEqual(n,42)
+        self.assertEqual(n1,-42)
+        self.assertEqual(n2,4193)
         self.assertEqual(n3,0)
+        self.assertEqual(n4,-2147483648)
+        self.assertEqual(n5,-12)
+        self.assertEqual(n6,2147483647)
+        self.assertEqual(n7,11)
+    def test_isPalindrome(self):
+        ins = Solution8()
+        bool=ins.isPalindrome(121)
+        bool1=ins.isPalindrome(-121)
+        bool2=ins.isPalindrome(10)
+        bool3=ins.isPalindrome(11)
+        self.assertTrue(bool)
+        self.assertFalse(bool1)
+        self.assertFalse(bool2)
+        self.assertTrue(bool3)
+    def test_isMatch(self):
+        ins = Solution9()
+        bool=ins.isMatch("aa",'a')
+        bool1=ins.isMatch("aa",'a*')
+        bool2=ins.isMatch("ab",'.*')
+        bool3=ins.isMatch("aab",p = "c*a*b")
+        bool4=ins.isMatch("mississippi",p = "mis*is*p*.")
+        bool5=ins.isMatch("ab",".*c")
+        self.assertFalse(bool)
+        self.assertTrue(bool1)
+        self.assertTrue(bool2)
+        self.assertTrue(bool3)
+        self.assertFalse(bool4)
+        self.assertFalse(bool5)
 if __name__ == '__main__':
     unittest.main()
 
