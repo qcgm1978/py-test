@@ -1,8 +1,11 @@
-
 import unittest
 from maxArea import Solution
 from intToRoman import Solution as Solution1
 from romanToInt import Solution as Solution2
+from longestCommonPrefix import Solution as Solution3
+from threeSum import Solution as Solution4
+from threeSumClosest import Solution as Solution5
+from letterCombinations import Solution as Solution6
 class TDD_TEST11(unittest.TestCase):
     def test_test11(self):
         ins = Solution()
@@ -72,6 +75,48 @@ class TDD_TEST11(unittest.TestCase):
         self.assertEqual(ins.romanToInt('LVIII'),58)
         self.assertEqual(ins.romanToInt('MCMXCIV'),1994)
         self.assertEqual(ins.romanToInt('MCDLXXVI'),1476)
+    def test_longestCommonPrefix(self):
+        ins = Solution3()
+        s=ins.longestCommonPrefix(["flower","flow","flight"])
+        self.assertEqual(s,'fl')
+        self.assertEqual(ins.longestCommonPrefix(["dog","racecar","car"]),'')
+        self.assertEqual(ins.longestCommonPrefix([]),'')
+        self.assertEqual(ins.longestCommonPrefix([""]),'')
+    def test_threeSum(self):
+        ins=Solution4()
+        self.assertEqual(ins.threeSum([-1, 0, 1, 2, -1, -4]),[
+            [-1, -1, 2],
+            [-1, 0, 1],
+        ])
+        self.assertEqual(ins.threeSum([0,0,0]),[
+            [0,0,0]
+        ])
+        self.assertEqual(ins.threeSum([-2,0,1,1,2]),[
+            [2,0,-2],[-2,1,1]
+        ])
+        self.assertEqual(ins.threeSum([-2,0,0,2,2]),[
+            [2,0,-2]
+        ])
+        self.assertEqual(len(ins.threeSum([-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6])),len([
+           [-4,-2,6],[-4,0,4],[-4,1,3],[-4,2,2],[-2,-2,4],[-2,0,2]
+        ]))
+        self.assertEqual((ins.threeSum([1, 4, -4, -5, -1, -2, -3, -4])), ([
+            [-3, -1, 4],
+            [-5, 1, 4],
+            ]))
+    def test_threeSumClosest(self):
+        ins = Solution5()
+        self.assertEqual(ins.threeSumClosest(nums = [-1,2,1,-4], target = 1),2)
+        self.assertEqual(ins.threeSumClosest([1,1,1,1],-100),3)
+    def test_letterCombinations(self):
+        ins = Solution6()
+        self.assertEqual(ins.letterCombinations("23"),["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"])
+        self.assertEqual(ins.letterCombinations("2"),["a","b","c"])
+        self.assertEqual(ins.letterCombinations("7"),["p","q","r","s"])
+        self.assertEqual(ins.letterCombinations("8"),['t', 'u', 'v'])
+        self.assertEqual(ins.letterCombinations("9"), ['w', 'x', 'y', 'z'])
+        self.maxDiff=None
+        self.assertCountEqual(ins.letterCombinations("234"),["adg","adh","adi","aeg","aeh","aei","afg","afh","afi","bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi","cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"])
 if __name__ == '__main__':
     unittest.main()
 
