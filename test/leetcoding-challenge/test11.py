@@ -116,7 +116,9 @@ class TDD_TEST11(unittest.TestCase):
         self.assertEqual(ins.letterCombinations("8"),['t', 'u', 'v'])
         self.assertEqual(ins.letterCombinations("9"), ['w', 'x', 'y', 'z'])
         self.maxDiff=None
-        self.assertCountEqual(ins.letterCombinations("234"),["adg","adh","adi","aeg","aeh","aei","afg","afh","afi","bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi","cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"])
+        p = ins.letterCombinations("234")
+        self.assertCountEqual(p,["adg","adh","adi","aeg","aeh","aei","afg","afh","afi","bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi","cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"])
+        self.assertEqual(ins.letterCombinations(""),None)
 if __name__ == '__main__':
     unittest.main()
 
