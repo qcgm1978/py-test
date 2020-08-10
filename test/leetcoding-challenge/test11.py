@@ -6,6 +6,7 @@ from longestCommonPrefix import Solution as Solution3
 from threeSum import Solution as Solution4
 from threeSumClosest import Solution as Solution5
 from letterCombinations import Solution as Solution6
+from fourSum import Solution as Solution7
 class TDD_TEST11(unittest.TestCase):
     def test_test11(self):
         ins = Solution()
@@ -119,6 +120,14 @@ class TDD_TEST11(unittest.TestCase):
         p = ins.letterCombinations("234")
         self.assertCountEqual(p,["adg","adh","adi","aeg","aeh","aei","afg","afh","afi","bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi","cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"])
         self.assertEqual(ins.letterCombinations(""),None)
+    def test_fourSum(self):
+        ins = Solution7()
+        l=ins.fourSum([1, 0, -1, 0, -2, 2],0)
+        self.assertEqual(l,[
+            [-1,  0, 0, 1],
+            [-2, -1, 1, 2],
+            [-2,  0, 0, 2]
+        ])
 if __name__ == '__main__':
     unittest.main()
 
