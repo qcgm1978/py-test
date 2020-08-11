@@ -37,10 +37,33 @@ def insertion_sort(InputList):
         j = i-1
         nxt_element = ret[i]
 # Compare the current element with next one
-		
         while (ret[j] > nxt_element) and (j >= 0):
             ret[j+1] = ret[j]
             j=j-1
         ret[j + 1] = nxt_element
     return ret
-
+def shellSort(input_list):
+    ret=input_list.copy()
+    gap = len(ret) // 2
+    while gap > 0:
+        for i in range(gap, len(ret)):
+            temp = ret[i]
+            j = i
+# Sort the sub list for this gap
+            while j >= gap and ret[j - gap] > temp:
+                ret[j] = ret[j - gap]
+                j = j-gap
+            ret[j] = temp
+# Reduce the gap for the next element
+        gap = gap // 2
+    return ret
+def selection_sort(input_list):
+    ret=input_list.copy()
+    for idx in range(len(ret)):
+        min_idx = idx
+        for j in range( idx +1, len(ret)):
+            if ret[min_idx] > ret[j]:
+                min_idx = j
+# Swap the minimum value with the compared value
+        ret[idx], ret[min_idx] = ret[min_idx], ret[idx]
+    return ret
