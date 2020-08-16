@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": "/usr/local/bin/python3",
     "python.linting.pylintPath": "C:\\Users\\zhang\\AppData\\Roaming\\Python\\Python38\\Scripts\\pylint.exe",
     "python.testing.unittestArgs": [
         "-v",

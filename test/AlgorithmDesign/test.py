@@ -3,7 +3,8 @@ from how import Solution as Solution1
 from backtracking import permute
 from treeTraversal import Node,NodePreOrder
 from sorting import bubblesort,merge_sort,insertion_sort,shellSort,selection_sort
-from searching import linear_search
+from searching import linear_search,intpolsearch,intpolsearch1
+from graph import dfs
 class TDD_HOW(unittest.TestCase):
     def test_how(self):
         self.assertEqual(Solution1().addTwo(1,2),3)
@@ -67,5 +68,23 @@ class TDD_HOW(unittest.TestCase):
         l = [64, 34, 25, 12, 22, 11, 90]
         self.assertTrue(linear_search(l, 12))
         self.assertFalse(linear_search(l, 91))
+    def test_intpolsearch(self):
+        l = [2, 6, 11, 19, 27, 31, 45, 121]
+        self.assertEqual(intpolsearch(l, 2),0)
+        self.assertEqual(intpolsearch(l, 121),7)
+        self.assertFalse(intpolsearch(l, 122))
+        self.assertFalse(intpolsearch(l, -122))
+        self.assertFalse(intpolsearch1(l, -122))
+        self.assertFalse(intpolsearch1(l, 122))
+        self.assertEqual(intpolsearch1(l, 121),7)
+        self.assertEqual(intpolsearch1(l, 2),0)
+    def test_graph(self):
+        gdict = { "a" : set(["b","c"]),
+                "b" : set(["a", "d"]),
+                "c" : set(["a", "d"]),
+                "d" : set(["e"]),
+                "e" : set(["a"])
+                }
+        dfs(gdict, 'a')
 if __name__ == '__main__':
     unittest.main()
