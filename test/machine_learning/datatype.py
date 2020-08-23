@@ -1,12 +1,13 @@
 from scipy import stats
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 class DataTypes(object):
     def __init__(self, n):
         if isinstance(n, dict):
             self.info = n
             self.prop = list(
-                filter(lambda key: isinstance(n[key], list) and key, n.keys())
+                filter(lambda key: isinstance(n[key], (list,np.ndarray)) and key, n.keys())
             )[0]
             self.list = self[self.prop]
             self.len = len(self.list)
@@ -17,6 +18,32 @@ class DataTypes(object):
             return self.info[i]
         except KeyError:
             return None
+    def pyplot(self,bars=5):
+        plt.hist(self.list, bars)
+        plt.show()
+    def scatter(self):
+        x = self.info['x']
+        y=self.info['y']
+        plt.scatter(x, y)
+    def show(self):
+        plt.show()
+    def getR(self):
+        x = self.info['x']
+        slope, intercept, r, p, std_err = stats.linregress(x,self.info['y'])
+        return r
+    def predict(self, predictX):
+        slope, intercept, r, p, std_err = stats.linregress(self.info['x'],self.info['y'])
+        return slope * predictX + intercept
+    def getModel(self):
+        x = self.info['x']
+        myfunc=self.predict
+        mymodel = list(map(myfunc, x))
+        return mymodel
+    def scatterLine(self):
+        mymodel=self.getModel()
+        self.scatter()
+        plt.plot(self.info['x'], mymodel)
+        self.show()
     def Numerical(self):
         return self.Discrete() or self.Continuous()
     def Discrete(self):
@@ -56,6 +83,13 @@ class DataTypes(object):
             return differenceStd
         else:
             return self.getStd()
+    def getPercentile(self,percent):
+        # listP = self.list.copy()
+        # listP.sort()
+        # lessIndex=round(self.len*percent)
+        # val = listP[lessIndex-1]
+        # return val
+        return np.percentile(self.list,percent*100)
     def getProbability(self):
         std = self.getDistance1std()
         std2decimal = round(std, 2)

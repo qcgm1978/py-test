@@ -1,5 +1,7 @@
 import unittest,math
 from datatype import DataTypes
+import numpy
+from scipy import stats
 class TDD_GETTING_STARTED(unittest.TestCase):
     def test_getting_started(self):
         l=[99,86,87,88,111,86,103,87,94,78,77,85,86]
@@ -57,6 +59,45 @@ class TDD_GETTING_STARTED(unittest.TestCase):
         distance=d.getDistance1std()
         self.assertAlmostEqual(distance,1.87,2)
         probability = d.getProbability()
-        self.assertEqual(probability,.015)
+        self.assertEqual(probability, .015)
+    def test_percentile(self):
+        ages = [5,31,43,48,50,41,7,11,15,39,80,82,32,2,8,6,25,36,27,61,31]
+        d = DataTypes({'ages': ages})
+        p = d.getPercentile(.75)
+        p1 = d.getPercentile(.9)
+        self.assertEqual(p,43)
+        self.assertEqual(p1,61.0)
+    def test_data_distribution(self):
+        x = numpy.random.uniform(0.0, 5.0, 250)
+        isfloat = all(isinstance(v, float) for v in x)
+        self.assertTrue(isfloat)
+    def test_histogram(self):
+        # x = numpy.random.normal(5.0, 100.0, 100000)
+        # d=DataTypes({'x':x})
+        # d.pyplot(100)
+        pass
+    def test_scatter(self):
+        x = [5,7,8,7,2,17,2,9,4,11,12,9,6]
+        y = [99,86,87,88,111,86,103,87,94,78,77,85,86]
+        
+        d = DataTypes({'x': x, 'y': y})
+        # d.scatterLine()
+        r = d.getR()
+        self.assertAlmostEqual(r, -0.76,2)
+        p=d.predict(10)
+        self.assertEqual(p,85.59308314937454)
+    def test_bad_fit(self):
+        x = [89,43,36,36,95,10,66,34,38,20,26,29,48,64,6,5,36,66,72,40]
+        y = [21,46,3,35,67,95,53,72,58,10,26,34,90,33,38,20,56,2,47,15]
+        d = DataTypes({'x': x, 'y': y})
+        # d.scatterLine()
+        r = d.getR()
+        self.assertAlmostEqual(r,0.01,2)
+    def test_random_data(self):
+        # x = numpy.random.normal(5.0, 1.0, 1000)
+        # y = numpy.random.normal(10.0, 5.0, 1000)
+        # d = DataTypes({'x': x, 'y': y})
+        # d.scatter()
+        pass
 if __name__ == '__main__':
     unittest.main()
