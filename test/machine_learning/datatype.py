@@ -1,12 +1,16 @@
 import pandas
-from sklearn import linear_model
+from sklearn import linear_model,tree
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score
+from sklearn.tree import DecisionTreeClassifier
+import pydotplus
 from scipy import stats
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import matplotlib.image as pltimg
 class DataTypes(object):
-    def __init__(self, n):
+    def __init__(self, n=None):
         if isinstance(n, dict):
             self.info = n
             self.prop = list(
@@ -23,6 +27,18 @@ class DataTypes(object):
             return self.info[i]
         except KeyError:
             return None
+    def createDecisionTree(self, file,features, y,dictionary,img):
+        df=self.getCsvData(file)
+        df = self.mapStrToNum(dictionary)
+        X=df[features]
+        dtree = DecisionTreeClassifier()
+        dtree = dtree.fit(X, df[y])
+        data = tree.export_graphviz(dtree, out_file=None, feature_names=features)
+        graph = pydotplus.graph_from_dot_data(data)
+        graph.write_png(img)
+        img=pltimg.imread(img)
+        imgplot = plt.imshow(img)
+        plt.show()
     def pyplot(self, bars=5):
         plt.hist(self.list, bars)
         plt.show()
@@ -30,41 +46,81 @@ class DataTypes(object):
         x = self.info["x"]
         y = self.info["y"]
         mymodel = np.poly1d(np.polyfit(x, y, 3))
-        minX = min(x)
-        maxX = max(x)
-        maxY=max(y)
+        minX = int(min(x))
+        maxX = int(max(x))
+        maxY = int(max(y))
         myline = np.linspace(minX, maxX, maxY)
         self.scatter()
         plt.plot(myline, mymodel(myline))
         self.show()
     def predictMultipleRegression(self, file, predictVals):
-        X = self.info['x']
-        y=self.info['y']
-        df = pandas.read_csv(file)
+        X = self.info["x"]
+        y = self.info["y"]
+        df = self.getCsvData(file)
         regr = linear_model.LinearRegression()
-        regr.fit(df[X],df[ y])
-        #predict the CO2 emission of a car where the weight is 2300kg, and the volume is 1300ccm:
-        predictedCO2 = regr.predict([predictVals])
-        return predictedCO2[0],list(regr.coef_)
-    def predictPolynomialRegression(self,predictX):
-        mymodel=self.getPolynomialModel()
+        regr.fit(df[X], df[y])
+        predict = regr.predict([predictVals])
+        return predict[0], list(regr.coef_)
+    def predictScale(self, file, toTransformVals):
+        df = self.getCsvData(file)
+        X = df[self.info["x"]]
+        y = df[self.info["y"]]
+        scale = StandardScaler()
+        scaledX = scale.fit_transform(X)
+        regr = linear_model.LinearRegression()
+        regr.fit(scaledX, y)
+        scaled = scale.transform([toTransformVals])
+        predict = regr.predict([scaled[0]])
+        return predict[0], list(regr.coef_)
+    def scale(self, file, scaleCols):
+        scale = StandardScaler()
+        df = self.getCsvData(file)
+        X = df[scaleCols]
+        scaledX = scale.fit_transform(X)
+        return scaledX
+    def getCsvData(self, file):
+        self.df = pandas.read_csv(file)
+        return self.df
+    def mapStrToNum(self, dictionary, df=None):
+        if df is None:
+            df = self.df
+        for field,v in dictionary.items():
+            df[field] = df[field].map(v)
+        return df
+    def predictPolynomialRegression(self, predictX):
+        mymodel = self.getPolynomialModel()
         return mymodel(predictX)
     def getPolynomialModel(self):
         x = self.info["x"]
         y = self.info["y"]
-        mymodel = np.poly1d(np.polyfit(x, y, 3))
+        mymodel = np.poly1d(np.polyfit(x, y, 4))
         return mymodel
-    def getRSquared(self):
+    def getRSquared(self, dataType="All"):
         x = self.info["x"]
         y = self.info["y"]
-        mymodel=self.getPolynomialModel()
-        return (r2_score(y, mymodel(x)))
-    def plotScatter(self):
-        self.scatter()
+        x, y = self.getData(dataType)
+        mymodel = self.getPolynomialModel()
+        return r2_score(y, mymodel(x))
+    def plotScatter(self, dataType="All"):
+        x = self.info["x"]
+        y = self.info["y"]
+        x, y = self.getData(dataType)
+        self.scatter(x, y)
         self.show()
-    def scatter(self):
+    def getData(self, dataType="All"):
         x = self.info["x"]
         y = self.info["y"]
+        if dataType == "train":
+            x = x[:80]
+            y = y[:80]
+        elif dataType == "test":
+            x = x[80:]
+            y = y[80:]
+        return x, y
+    def scatter(self, x=None, y=None):
+        if x is None or y is None:
+            x = self.info["x"]
+            y = self.info["y"]
         plt.scatter(x, y)
     def show(self):
         plt.show()
