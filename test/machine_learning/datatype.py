@@ -1,5 +1,5 @@
 import pandas
-from sklearn import linear_model,tree
+from sklearn import linear_model, tree
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score
 from sklearn.tree import DecisionTreeClassifier
@@ -27,21 +27,26 @@ class DataTypes(object):
             return self.info[i]
         except KeyError:
             return None
-    def createDecisionTree(self, file,features, y,dictionary,img):
-        df=self.getCsvData(file)
-        df = self.mapStrToNum(dictionary)
-        X=df[features]
+    def getAndFormatData(self, file, dictionary):
+        df = self.getCsvData(file)
+        self.mapStrToNum(dictionary, df)
+        return self
+    def createDecisionTreeData(self, features, y):
+        df = self.df
+        X = df[features]
         dtree = DecisionTreeClassifier()
         dtree = dtree.fit(X, df[y])
-        data = tree.export_graphviz(dtree, out_file=None, feature_names=features)
-        graph = pydotplus.graph_from_dot_data(data)
+        self.graphData = tree.export_graphviz(dtree, out_file=None, feature_names=features)
+        return self
+    def graphByData(self,  img):
+        graph = pydotplus.graph_from_dot_data(self.graphData)
         graph.write_png(img)
-        img=pltimg.imread(img)
+        img = pltimg.imread(img)
         imgplot = plt.imshow(img)
-        plt.show()
+        return self
     def pyplot(self, bars=5):
         plt.hist(self.list, bars)
-        plt.show()
+        self.show()
     def polynomialRegressionLine(self):
         x = self.info["x"]
         y = self.info["y"]
@@ -84,7 +89,7 @@ class DataTypes(object):
     def mapStrToNum(self, dictionary, df=None):
         if df is None:
             df = self.df
-        for field,v in dictionary.items():
+        for field, v in dictionary.items():
             df[field] = df[field].map(v)
         return df
     def predictPolynomialRegression(self, predictX):

@@ -26,15 +26,19 @@ class TDD_DECISION_TREE(unittest.TestCase):
     def test_decision_tree(self):
         file = "test/machine_learning/shows.csv"
         img='test/machine_learning/mydecisiontree.png'
-        features = ["Age", "Experience", "Rank", "Nationality"]
-        X = features
+        X = ["Age", "Experience", "Rank", "Nationality"]
         y = "Go"
         d1 = {"UK": 0, "USA": 1, "N": 2}
         d2 = {"YES": 1, "NO": 0}
         dictionary = {"Nationality": d1, "Go": d2}
         d = DataTypes()
-        d.createDecisionTree(file,X,y,dictionary,img)
-
+        d\
+            .getAndFormatData(file, dictionary)\
+            .createDecisionTreeData(X, y)\
+            .graphByData(img)\
+            .show()
+    def test_first_step(self):
+        pass
     def test_gini(self):
         # Gini = 1 - (x/n)2 - (y/n)2
         # Where x is the number of positive answers("GO"), n is the number of samples, and y is the number of negative answers ("NO"), which gives us this calculation:
@@ -52,6 +56,9 @@ class TDD_DECISION_TREE(unittest.TestCase):
         y = n - x
         Gini = 1 - (x / n) ** 2 - (y / n) ** 2
         self.assertAlmostEqual(Gini, 0.497, 3)
+        self.assertEqual(n,13)
+        value = [round(n * Gini), round(n * (1 - Gini))]
+        self.assertEqual(value,[6,7])
         zero = go == 0
         dfZero = df[zero]
         rank = dfZero["Rank"]
@@ -60,7 +67,7 @@ class TDD_DECISION_TREE(unittest.TestCase):
         self.assertEqual(rank1.shape[0], 5)
         goCounts=dfZero[dfZero['Go']==1]
         self.assertEqual(goCounts.shape[0],0)
-        print(dfZero)
+        # print(dfZero)
 
 
 if __name__ == "__main__":
