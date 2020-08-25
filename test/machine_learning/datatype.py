@@ -39,12 +39,14 @@ class DataTypes(object):
         if callable(getSample):
             samples = getSample(self.df)
         else:
-            samples=self.df
+            samples = self.df
+            # Gini = 1 - (x/n)2 - (y/n)2
+        # Where x is the number of positive answers("GO"), n is the number of samples, and y is the number of negative answers ("NO"), which gives us this calculation:
         n = samples.shape[0]
         x=samples.loc[samples[self.target] == 1].shape[0]
         y = n - x
         Gini = 1 - (x / n) ** 2 - (y / n) ** 2
-        return Gini,n
+        return Gini,n,[y,x]
     def getAndFormatData(self, file, dictionary):
         df = self.readCsv(file)
         self.mapStrToNum(dictionary, df)
