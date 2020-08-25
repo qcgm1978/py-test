@@ -60,6 +60,49 @@ class TDD_DECISION_TREE(unittest.TestCase):
         Gini, n,value = self.d.getGini( getSample=getSample)
         self.assertAlmostEqual(Gini, .219, 3)
         self.assertEqual(n,8)
-        self.assertEqual(value, [1,7])
+        self.assertEqual(value, [1, 7])
+    def test_third_true_step(self):
+        getSample=lambda df:df[(df['Nationality']<=.5) & (df['Rank']>6.5)]
+        Gini, n,value = self.d.getGini( getSample=getSample)
+        self.assertAlmostEqual(Gini, .375, 3)
+        self.assertEqual(n,4)
+        self.assertEqual(value, [1, 3])
+    def test_third_false_step(self):
+        getSample=lambda df:df[(df['Nationality']>.5) & (df['Rank']>6.5)]
+        Gini, n,value = self.d.getGini( getSample=getSample)
+        self.assertEqual(Gini, 0)
+        self.assertEqual(n,4)
+        self.assertEqual(value, [0, 4])
+    def test_fourth_true_step(self):
+        getSample=lambda df:df[(df['Age']<=35.5)&(df['Nationality']<=.5) & (df['Rank']>6.5)]
+        Gini, n,value = self.d.getGini( getSample=getSample)
+        self.assertEqual(Gini, 0)
+        self.assertEqual(n,2)
+        self.assertEqual(value, [0, 2])
+    def test_fourth_false_step(self):
+        getSample=lambda df:df[(df['Age']>35.5)&(df['Nationality']<=.5) & (df['Rank']>6.5)]
+        Gini, n,value = self.d.getGini( getSample=getSample)
+        self.assertEqual(Gini, .5)
+        self.assertEqual(n,2)
+        self.assertEqual(value, [1, 1])
+    def test_fifth_true_step(self):
+        getSample=lambda df:df[(df['Experience']<=9.5)&(df['Age']>35.5)&(df['Nationality']<=.5) & (df['Rank']>6.5)]
+        Gini, n,value = self.d.getGini( getSample=getSample)
+        self.assertEqual(Gini, 0)
+        self.assertEqual(n,1)
+        self.assertEqual(value, [0,1])
+    def test_fifth_false_step(self):
+            getSample=lambda df:df[(df['Experience']>9.5)&(df['Age']>35.5)&(df['Nationality']<=.5) & (df['Rank']>6.5)]
+            Gini, n,value = self.d.getGini( getSample=getSample)
+            self.assertEqual(Gini, 0)
+            self.assertEqual(n,1)
+            self.assertEqual(value, [1, 0])
+    def test_predict_decision_tree(self):
+        X = ["Age", "Experience", "Rank", "Nationality"]
+        p = self.d.predictbyDecisionTree(X, [40, 10, 7, 1])
+        # The Decision Tree does not give us a 100% certain answer. It is based on the probability of an outcome, and the answer will vary.
+        self.assertTrue(list(p)[0] in [0,1])
+        p=self.d.predictbyDecisionTree(X,[40, 10, 6, 1])
+        self.assertTrue(list(p)[0] in [0,1])
 if __name__ == "__main__":
     unittest.main()

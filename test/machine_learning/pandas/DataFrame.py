@@ -12,6 +12,13 @@ class TDD_DATAFRAME(unittest.TestCase):
         )
         self.assertEqual(df.shape, (3, 2))
         l=df.loc[df['shield'] > 6]
-        self.assertListEqual(list(l.values[0]),[5,8])
+        self.assertEqual(list(l.values[0]), [5, 8])
+        l=df.loc[df['shield'] > 6, ['max_speed']]
+        self.assertEqual(list(l.values[0]), [5])
+        l=df[(df['shield'] > 6) & (df['max_speed']>6)]
+        self.assertEqual(list(l.values), [])
+        l=df[(df['shield'] > 6) & (df['max_speed']<6)]
+        self.assertEqual(list(l.values[0]), [5,8])
+
 if __name__ == '__main__':
     unittest.main()

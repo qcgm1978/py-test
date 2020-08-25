@@ -51,11 +51,19 @@ class DataTypes(object):
         df = self.readCsv(file)
         self.mapStrToNum(dictionary, df)
         return self
-    def createDecisionTreeData(self, features, y):
+    def predictbyDecisionTree(self,features,condition, y=None):
+        dtree=self.getDtree(features,y)
+        return dtree.predict([condition])
+    def getDtree(self, features, y=None):
+        if y is None:
+            y=self.target
         df = self.df
         X = df[features]
         dtree = DecisionTreeClassifier()
         dtree = dtree.fit(X, df[y])
+        return dtree
+    def createDecisionTreeData(self, features, y):
+        dtree=self.getDtree(features, y)
         self.graphData = tree.export_graphviz(
             dtree, out_file=None, feature_names=features
         )
@@ -106,13 +114,14 @@ class DataTypes(object):
         scaledX = scale.fit_transform(X)
         return scaledX
     def readCsv(self, file):
-        df = pandas.read_csv(file)
-        return df
+        self.df = pandas.read_csv(file)
+        return self.df
     def mapStrToNum(self, dictionary, df=None):
         if df is None:
             df = self.df
         for field, v in dictionary.items():
             df[field] = df[field].map(v)
+        self.df=df
         return df
     def predictPolynomialRegression(self, predictX):
         mymodel = self.getPolynomialModel()
