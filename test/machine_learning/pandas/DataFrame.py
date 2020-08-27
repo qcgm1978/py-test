@@ -2,12 +2,20 @@
 import unittest, pandas as pd
 import numpy as np
 class TDD_DATAFRAME(unittest.TestCase):
+    # First define a class variable that determines 
+    # if setUp was ever run
+    ClassIsSetup = False
     def setUp(self):
-        data = {'name': ['Jack', 'Frank', 'Kelly', 'Rebecca', "Monica"], 
-        'year': [2015, 2011, 2010, 2014, ''], 
-        'reports': [24, 4, 2, 31, None]}
-        self.df = pd.DataFrame(data, index = ['New York', 'New Orleans', 'Budapest', 'Helsinki', "Cologne"])
-        return super().setUp()
+        # If it was not setup yet, do it
+        if not self.ClassIsSetup:
+            data = {'name': ['Jack', 'Frank', 'Kelly', 'Rebecca', "Monica"], 
+            'year': [2015, 2011, 2010, 2014, 0], 
+            'reports': [24, 4, 2, 31, 0]}
+            self.__class__.df = pd.DataFrame(data, index=['New York', 'New Orleans', 'Budapest', 'Helsinki', "Cologne"])
+            print(self.df)
+            # remember that it was setup already
+            self.__class__.ClassIsSetup = True
+            return super().setUp()
     # pandas.DataFrame.loc
     # property DataFrame.loc
     # Access a group of rows and columns by label(s) or a boolean array.
@@ -32,13 +40,34 @@ class TDD_DATAFRAME(unittest.TestCase):
         n=self.df['name']
         self.assertEqual(list(n), ['Jack', 'Frank', 'Kelly', 'Rebecca', "Monica"])
         n = self.df[['name', 'year']]
-        print(n.values)
+        # print(n.values)
         self.assertEqual(n.values.tolist(), [
             ['Jack', 2015.0],
             ['Frank' ,2011.0],
             ['Kelly' ,2010.0],
             ['Rebecca', 2014.0],
-            ['Monica', '']
+            ['Monica', 0]
         ])
+    def test_filter_rows_where(self):
+        df=self.df
+        g = df[df['year'] > 2012]
+        self.assertEqual(g.values.tolist(), [['Jack', 2015, 24.0], ['Rebecca', 2014, 31.0]])
+        t=df[(df['year'] > 2012) & (df['reports'] < 30)]
+        self.assertEqual(t.values.tolist(), [['Jack', 2015, 24.0]])
+    def test_first_last_rows(self):
+        df=self.df
+        t = df[:2]
+        self.assertEqual(list(t),['name', 'year', 'reports'])
+        self.assertEqual(t.values.tolist(),[['Jack', 2015,24],['Frank', 2011, 4]])
+        l=df[-1:]
+        self.assertEqual(l.values.tolist(),[["Monica", 
+         0, 
+        0]])
+        self.assertRaises(KeyError,lambda:df[-1])
+    def test_query_string(self):
+        df = self.df
+        q=df.query('year > 2012 | name == "Frank"')
+        self.assertEqual(q.values.tolist(),[['Jack',  2015  ,     24],['Frank',  2011 ,       4],['Rebecca',  2014   ,    31]])
+
 if __name__ == '__main__':
     unittest.main()
