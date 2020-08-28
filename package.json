@@ -25,16 +25,18 @@
   "dependencies": {
     "glob": "^7.1.6",
     "jest": "^24.9.0",
-    "ts-jest": "^25.1.0"
+    "jest-chain": "^1.1.5",
+    "ts-jest": "^25.5.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",
-    "jest-chain": "^1.1.2"
+    "jest-chain": "^1.1.2",
+    "typescript": "^4.0.2"
   },
   "scripts": {
     "test": "jest --watch",
-    "py":"alias python=python3",
-    "create":"python3 test/others/create-with-arg.py test/re/_compile_re"
+    "py": "alias python=python3",
+    "create": "python3 test/others/create-with-arg.py test/re/_compile_re"
   },
   "repository": {
     "type": "git",

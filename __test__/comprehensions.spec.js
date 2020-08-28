@@ -20,7 +20,7 @@ it(`glob`, done => {
     const files = fs.readdirSync(process.env.PWD + '/.vscode/', { withFileTypes: true })
         .filter(item => !item.isDirectory())
         .map(item => item.name)
-    expect(files).toEqual(['launch.json', 'settings.json'])
+    expect(files).toEqual(['launch.json', 'settings.json',"tasks.json"])
     var glob = require("glob")
 
     // options is optional
@@ -29,7 +29,7 @@ it(`glob`, done => {
         // If the `nonull` option is set, and nothing
         // was found, then files is ["**/*.js"]
         // er is an error object or null.
-        expect(files.map(item => item.split('/').pop())).toEqual(['launch.json', 'settings.json']);
+        expect(files.map(item => item.split('/').pop())).toEqual(['launch.json', 'settings.json',"tasks.json"]);
         done()
     })
 });
