@@ -1,7 +1,6 @@
 import unittest,math
 from datatype import DataTypes
 import numpy
-from scipy import stats
 class TDD_GETTING_STARTED(unittest.TestCase):
     def test_getting_started(self):
         l=[99,86,87,88,111,86,103,87,94,78,77,85,86]

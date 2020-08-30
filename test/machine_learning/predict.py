@@ -1,8 +1,8 @@
 # Machine Learning is a program that analyses data and learns to predict the outcome.
-from scipy import stats
 from sklearn import linear_model
 from sklearn.preprocessing import StandardScaler
-class Predict(object):
+from do_statistics.doStats import DoStats
+class Predict(DoStats):
     def predictbyDecisionTree(self,features,condition, y=None):
         dtree=self.getDtree(features,y)
         return dtree.predict([condition])
@@ -29,9 +29,7 @@ class Predict(object):
         mymodel = self.getPolynomialModel()
         return mymodel(predictX)
     def predict(self, predictX):
-        slope, intercept, r, p, std_err = stats.linregress(
-            self.info["x"], self.info["y"]
-        )
+        slope, intercept, r, p, std_err = self.getLinregress()
         return slope * predictX + intercept
     def getModel(self):
         x = self.info["x"]

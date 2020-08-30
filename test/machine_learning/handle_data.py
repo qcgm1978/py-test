@@ -1,14 +1,14 @@
 # Machine Learning is making the computer learn from studying data and statistics.
-import math
 import pandas
 import numpy as np
-from sklearn import  tree
+from sklearn import tree
 import pydotplus
 import matplotlib.image as pltimg
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-from scipy import stats
-class HandleData(object):
+from mathMethods.doMath import DoMath
+from do_statistics.doStats import DoStats
+class HandleData(DoMath,DoStats):
     def __init__(self, n=None):
         if isinstance(n, dict):
             self.info = n
@@ -21,12 +21,12 @@ class HandleData(object):
                 self.prop = listProp[0]
                 self.list = self[self.prop]
                 self.len = len(self.list)
-            if 'target' in n:
-                self.target=n['target']
+            if "target" in n:
+                self.target = n["target"]
             if "file" in n:
                 self.df = self.readCsv(n["file"])
-                if 'mapData' in n:
-                    self.df =self.mapStrToNum(n['mapData'])
+                if "mapData" in n:
+                    self.df = self.mapStrToNum(n["mapData"])
         else:
             self.n = n
     def __getitem__(self, i):
@@ -39,7 +39,7 @@ class HandleData(object):
         self.mapStrToNum(dictionary, df)
         return self
     def createDecisionTreeData(self, features, y):
-        dtree=self.getDtree(features, y)
+        dtree = self.getDtree(features, y)
         self.graphData = tree.export_graphviz(
             dtree, out_file=None, feature_names=features
         )
@@ -64,7 +64,7 @@ class HandleData(object):
             df = self.df
         for field, v in dictionary.items():
             df[field] = df[field].map(v)
-        self.df=df
+        self.df = df
         return df
     def getData(self, dataType="All"):
         x = self.info["x"]
@@ -95,15 +95,14 @@ class HandleData(object):
         # speed.sort()
         # return speed[len(speed)//2]
         return np.median(self.list)
-    def getMode(self):
-        return stats.mode(self.list)
+    
     def getStd(self):
         return np.std(self.list)
+    
     def get1stdProbability(self):
         mean = self.getMean()
         minusSquare = map(lambda x: (x - mean) ** 2, self.list)
-        sumVal = sum(list(minusSquare))
-        probability = math.sqrt(sumVal / self.len)
+        probability = self.getMeanSqr(minusSquare)
         return probability
     def getDistance1std(self):
         expect = self["expectation"]
