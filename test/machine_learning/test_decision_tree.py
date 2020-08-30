@@ -36,11 +36,11 @@ class TDD_DECISION_TREE(unittest.TestCase):
         d2 = {"YES": 1, "NO": 0}
         dictionary = {"Nationality": d1, "Go": d2}
         d = DataTypes()
-        # d\
-        #     .getAndFormatData(file, dictionary)\
-        #     .createDecisionTreeData(X, y)\
-        #     .graphByData(img)\
-        #     .show()
+        d\
+            .getAndFormatData(file, dictionary)\
+            .createDecisionTreeData(X, y)\
+            .graphByData(img)\
+            .show()
     def test_first_step(self):
         df = self.d.df
         y = df["Go"]

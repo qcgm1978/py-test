@@ -2,7 +2,9 @@
 from sklearn import linear_model
 from sklearn.preprocessing import StandardScaler
 from do_statistics.doStats import DoStats
-class Predict(DoStats):
+from graphic.decision_tree import DecisionTree
+from mathMethods.doMath import DoMath
+class Predict(DoStats,DecisionTree):
     def predictbyDecisionTree(self,features,condition, y=None):
         dtree=self.getDtree(features,y)
         return dtree.predict([condition])

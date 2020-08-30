@@ -1,7 +1,6 @@
 # Machine Learning is making the computer learn from studying data and statistics.
 import pandas
 import numpy as np
-from sklearn import tree
 import pydotplus
 import matplotlib.image as pltimg
 import matplotlib.pyplot as plt
@@ -38,12 +37,7 @@ class HandleData(DoMath,DoStats):
         df = self.readCsv(file)
         self.mapStrToNum(dictionary, df)
         return self
-    def createDecisionTreeData(self, features, y):
-        dtree = self.getDtree(features, y)
-        self.graphData = tree.export_graphviz(
-            dtree, out_file=None, feature_names=features
-        )
-        return self
+    
     def graphByData(self, img):
         graph = pydotplus.graph_from_dot_data(self.graphData)
         graph.write_png(img)

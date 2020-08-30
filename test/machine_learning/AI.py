@@ -1,6 +1,7 @@
 # Machine Learning is a step into the direction of artificial intelligence (AI).
 from sklearn.metrics import r2_score
 from do_statistics.doStats import DoStats
+from mathMethods.doMath import DoMath
 class DoAI(DoStats):
     def getRSquared(self, dataType="All"):
         x = self.info["x"]
