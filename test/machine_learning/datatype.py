@@ -51,9 +51,6 @@ class DataTypes(object):
         df = self.readCsv(file)
         self.mapStrToNum(dictionary, df)
         return self
-    def predictbyDecisionTree(self,features,condition, y=None):
-        dtree=self.getDtree(features,y)
-        return dtree.predict([condition])
     def getDtree(self, features, y=None):
         if y is None:
             y=self.target
@@ -88,25 +85,6 @@ class DataTypes(object):
         self.scatter()
         plt.plot(myline, mymodel(myline))
         self.show()
-    def predictMultipleRegression(self, file, predictVals):
-        X = self.info["x"]
-        y = self.info["y"]
-        df = self.readCsv(file)
-        regr = linear_model.LinearRegression()
-        regr.fit(df[X], df[y])
-        predict = regr.predict([predictVals])
-        return predict[0], list(regr.coef_)
-    def predictScale(self, file, toTransformVals):
-        df = self.readCsv(file)
-        X = df[self.info["x"]]
-        y = df[self.info["y"]]
-        scale = StandardScaler()
-        scaledX = scale.fit_transform(X)
-        regr = linear_model.LinearRegression()
-        regr.fit(scaledX, y)
-        scaled = scale.transform([toTransformVals])
-        predict = regr.predict([scaled[0]])
-        return predict[0], list(regr.coef_)
     def scale(self, file, scaleCols):
         scale = StandardScaler()
         df = self.readCsv(file)
@@ -123,9 +101,6 @@ class DataTypes(object):
             df[field] = df[field].map(v)
         self.df=df
         return df
-    def predictPolynomialRegression(self, predictX):
-        mymodel = self.getPolynomialModel()
-        return mymodel(predictX)
     def getPolynomialModel(self):
         x = self.info["x"]
         y = self.info["y"]
@@ -164,16 +139,6 @@ class DataTypes(object):
         x = self.info["x"]
         slope, intercept, r, p, std_err = stats.linregress(x, self.info["y"])
         return r
-    def predict(self, predictX):
-        slope, intercept, r, p, std_err = stats.linregress(
-            self.info["x"], self.info["y"]
-        )
-        return slope * predictX + intercept
-    def getModel(self):
-        x = self.info["x"]
-        myfunc = self.predict
-        mymodel = list(map(myfunc, x))
-        return mymodel
     def scatterLine(self):
         mymodel = self.getModel()
         self.scatter()
@@ -242,3 +207,39 @@ class DataTypes(object):
         # variance = sum(squareList) / len(squareList)
         variance = np.var(self["speed"])
         return variance
+        # Machine Learning is a program that analyses data and learns to predict the outcome.
+    def predictbyDecisionTree(self,features,condition, y=None):
+        dtree=self.getDtree(features,y)
+        return dtree.predict([condition])
+    def predictMultipleRegression(self, file, predictVals):
+        X = self.info["x"]
+        y = self.info["y"]
+        df = self.readCsv(file)
+        regr = linear_model.LinearRegression()
+        regr.fit(df[X], df[y])
+        predict = regr.predict([predictVals])
+        return predict[0], list(regr.coef_)
+    def predictScale(self, file, toTransformVals):
+        df = self.readCsv(file)
+        X = df[self.info["x"]]
+        y = df[self.info["y"]]
+        scale = StandardScaler()
+        scaledX = scale.fit_transform(X)
+        regr = linear_model.LinearRegression()
+        regr.fit(scaledX, y)
+        scaled = scale.transform([toTransformVals])
+        predict = regr.predict([scaled[0]])
+        return predict[0], list(regr.coef_)
+    def predictPolynomialRegression(self, predictX):
+        mymodel = self.getPolynomialModel()
+        return mymodel(predictX)
+    def predict(self, predictX):
+        slope, intercept, r, p, std_err = stats.linregress(
+            self.info["x"], self.info["y"]
+        )
+        return slope * predictX + intercept
+    def getModel(self):
+        x = self.info["x"]
+        myfunc = self.predict
+        mymodel = list(map(myfunc, x))
+        return mymodel
