@@ -1,10 +1,10 @@
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
-import matplotlib.pyplot as plt
 from predict import Predict
 from handle_data import HandleData
 from AI import DoAI
-class DataTypes(HandleData,Predict,DoAI):
+from graphic.plot import Plot
+class DataTypes(HandleData,Predict,DoAI,Plot):
     
     def getGini(self, getSample=None):
         if callable(getSample):
@@ -29,20 +29,7 @@ class DataTypes(HandleData,Predict,DoAI):
         return dtree
     
     
-    def pyplot(self, bars=5):
-        plt.hist(self.list, bars)
-        self.show()
-    def polynomialRegressionLine(self):
-        x = self.info["x"]
-        y = self.info["y"]
-        mymodel = np.poly1d(np.polyfit(x, y, 3))
-        minX = int(min(x))
-        maxX = int(max(x))
-        maxY = int(max(y))
-        myline = np.linspace(minX, maxX, maxY)
-        self.scatter()
-        plt.plot(myline, mymodel(myline))
-        self.show()
+    
     
     def getPolynomialModel(self):
         x = self.info["x"]
@@ -57,17 +44,5 @@ class DataTypes(HandleData,Predict,DoAI):
         self.scatter(x, y)
         self.show()
     
-    def scatter(self, x=None, y=None):
-        if x is None or y is None:
-            x = self.info["x"]
-            y = self.info["y"]
-        plt.scatter(x, y)
-    def show(self):
-        plt.show()
     
-    def scatterLine(self):
-        mymodel = self.getModel()
-        self.scatter()
-        plt.plot(self.info["x"], mymodel)
-        self.show()
     
