@@ -15,3 +15,7 @@ class MysqlOp(object):
         self.mycursor.execute("SHOW TABLES")
     def createTable(self):
         self.mycursor.execute("CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))")
+    def createPrimaryKey(self):
+        self.mycursor.execute("CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))")
+    def alterTable(self):
+        self.mycursor.execute("ALTER TABLE customers ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY")
