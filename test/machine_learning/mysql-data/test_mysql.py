@@ -18,8 +18,8 @@ class TDD_TEST_MYSQL(unittest.TestCase):
     def test_insert(self):
         sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
         val = ("John", "Highway 21")
-        self.m.insertInto(sql,val)
-        self.assertEqual(self.m.mycursor.rowcount, 1)
+        r=self.m.insertInto(sql,val)
+        self.assertEqual(self.m.mycursor.rowcount, 1 if r else -1)
         val = [
         ('Peter', 'Lowstreet 4'),
         ('Amy', 'Apple st 652'),
@@ -35,8 +35,8 @@ class TDD_TEST_MYSQL(unittest.TestCase):
         ('Chuck', 'Main Road 989'),
         ('Viola', 'Sideway 1633')
         ]
-        self.m.executemany(val)
-        self.assertEqual(self.m.mycursor.rowcount, len(val))
+        r=self.m.executemany(val)
+        self.assertEqual(self.m.mycursor.rowcount, len(val) if r else -1)
     def test_insert_id(self):
         sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
         val = ("Michelle", "Blue Village")

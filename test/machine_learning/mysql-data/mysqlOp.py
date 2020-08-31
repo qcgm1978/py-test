@@ -26,12 +26,20 @@ class MysqlOp(object):
 '''
         self.mycursor.execute(alter)
     def insertInto(self,sql,val):
-        self.mycursor.execute(sql, val)
-        self.mydb.commit()
+        try:
+            self.mycursor.execute(sql, val)
+            self.mydb.commit()
+            return 1
+        except mysql.connector.errors.IntegrityError:
+            return 0
     def executemany(self,val):
         sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
-        self.mycursor.executemany(sql, val)
-        self.mydb.commit()
+        try:
+            self.mycursor.executemany(sql, val)
+            self.mydb.commit()
+            return 1
+        except mysql.connector.errors.IntegrityError:
+            return 0
     def select(self):
         self.mycursor.execute("SELECT * FROM {0}".format(self.table))
         myresult = self.mycursor.fetchall()
@@ -43,3 +51,24 @@ class MysqlOp(object):
     def fetchOne(self):
         self.mycursor.execute("SELECT * FROM {0}".format(self.table))
         return self.mycursor.fetchone()
+    def where(self,d):
+        s=reduce(lambda acc,key:"{0} = '{1}'".format(key,d[key]),d,'')
+        sql = "SELECT * FROM customers WHERE {0}".format(s) 
+        self.mycursor.execute(sql)
+        return self.mycursor.fetchall()
+    def ignore(self,colName):
+        sql='''delete from {0} 
+where ID in (
+select * from (select ID from {0} where ID not in (
+select max(ID) from {0} group by {1}
+) ORDER BY ID
+) AS p
+)'''.format(self.table,colName)
+        self.mycursor.execute(sql)
+    def unique(self,colName):
+        self.ignore(colName)
+        sql = "ALTER  TABLE {0} ADD UNIQUE unique_index  ({1})".format(self.table,colName)
+        try:
+            self.mycursor.execute(sql)
+        except mysql.connector.errors.ProgrammingError:
+            return None
