@@ -18,4 +18,13 @@ class MysqlOp(object):
     def createPrimaryKey(self):
         self.mycursor.execute("CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))")
     def alterTable(self):
-        self.mycursor.execute("ALTER TABLE customers ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY")
+        alter = '''
+    ALTER TABLE customers  
+    ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY
+'''
+        self.mycursor.execute(alter)
+    def insertInto(self):
+        sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
+        val = ("John", "Highway 21")
+        self.mycursor.execute(sql, val)
+        self.mydb.commit()
