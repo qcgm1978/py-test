@@ -2,7 +2,7 @@ import unittest,mysql
 from mysqlOp import MysqlOp
 class TDD_TEST_MYSQL(unittest.TestCase):
     def setUp(self):
-        self.m = MysqlOp()
+        self.m = MysqlOp('customers')
         return super().setUp()
     def test_test_mysql(self):
         self.m.showTables()
@@ -16,8 +16,32 @@ class TDD_TEST_MYSQL(unittest.TestCase):
         except mysql.connector.errors.ProgrammingError:
             pass
     def test_insert(self):
-        self.m.insertInto()
+        sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
+        val = ("John", "Highway 21")
+        self.m.insertInto(sql,val)
         self.assertEqual(self.m.mycursor.rowcount, 1)
-
+        val = [
+        ('Peter', 'Lowstreet 4'),
+        ('Amy', 'Apple st 652'),
+        ('Hannah', 'Mountain 21'),
+        ('Michael', 'Valley 345'),
+        ('Sandy', 'Ocean blvd 2'),
+        ('Betty', 'Green Grass 1'),
+        ('Richard', 'Sky st 331'),
+        ('Susan', 'One way 98'),
+        ('Vicky', 'Yellow Garden 2'),
+        ('Ben', 'Park Lane 38'),
+        ('William', 'Central st 954'),
+        ('Chuck', 'Main Road 989'),
+        ('Viola', 'Sideway 1633')
+        ]
+        self.m.executemany(val)
+        self.assertEqual(self.m.mycursor.rowcount, len(val))
+    def test_insert_id(self):
+        sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
+        val = ("Michelle", "Blue Village")
+        self.m.insertInto(sql, val)
+        self.assertIsInstance( self.m.mycursor.lastrowid,int)
+    
 if __name__ == '__main__':
     unittest.main()
