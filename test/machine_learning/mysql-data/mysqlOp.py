@@ -72,3 +72,12 @@ select max(ID) from {0} group by {1}
             self.mycursor.execute(sql)
         except mysql.connector.errors.ProgrammingError:
             return None
+    def wild(self,d):
+        s=reduce(lambda acc,key:"{0} LIKE '%{1}%'".format(key,d[key]),d,'')
+        sql = "SELECT * FROM {0} WHERE {1}".format(self.table,s)
+        self.mycursor.execute(sql)
+        return  self. mycursor.fetchall()
+    def escape(self,adr,field='address'):
+        sql = "SELECT * FROM {0} WHERE {1} = %s".format(self.table,field)
+        self.mycursor.execute(sql, adr)
+        return self. mycursor.fetchall()

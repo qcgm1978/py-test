@@ -1,5 +1,6 @@
 {
   "name": "py-test",
+  "pwd":"test@2018",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

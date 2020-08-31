@@ -18,6 +18,13 @@ class TDD_READ(unittest.TestCase):
     def test_filter(self):
         f=self.m.where({'address' :'Park Lane 38'})
         self.assertEqual(f,[('Ben', 'Park Lane 38', 451)])
+    def test_wild(self):
+        w=self.m.wild({'address':'way'})
+        self.assertEqual(w,[('John', 'Highway 21', 441), ('Susan', 'One way 98', 449), ('Viola', 'Sideway 1633', 454)])
+    def test_escape(self):
+        adr = ("Yellow Garden 2", )
+        e=self.m.escape(adr)
+        self.assertEqual(e,[('Vicky', 'Yellow Garden 2', 450)])
 if __name__ == '__main__':
     unittest.main()
 
