@@ -8,7 +8,7 @@ class TDD_READ(unittest.TestCase):
         self.m.showTables()
         self.assertIsInstance(self.m.mycursor, object)
         for k in self.m.mycursor:
-            self.assertTrue(k in [('customers',),('users',)])
+            self.assertTrue(k in [('customers',),('users',),('products',)])
     def test_select(self):
         s = self.m.select()
         self.assertEqual(len(s),self.m.mycursor.rowcount)

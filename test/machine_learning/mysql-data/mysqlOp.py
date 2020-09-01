@@ -9,14 +9,16 @@ class MysqlOp(object):
         self.mycursor = self.mydb.cursor(buffered=True)
         if isinstance(cols,dict):
             self.createTable(cols)
-            self.fields=cols
+            self.fields = cols
+            self.fields.pop('id',None)
             if isinstance(val,list):
                 self.executemany(val)
         elif isinstance(cols,list):
             fields=cols[0]
             if isinstance(fields,dict):
                 d=self.getFields(fields)
-                self.fields=d
+                self.fields = d
+                self.fields.pop('id',None)
                 self.createTable(d)
                 self.executemany(cols)
     def __del__(self):
@@ -33,7 +35,12 @@ class MysqlOp(object):
     def showTables(self):
         self.mycursor.execute("SHOW TABLES")
     def createTable(self,d):
-        s=reduce(lambda acc, key: acc+"{0} {1},".format(key, d[key]), d, "")
+        def getKey(acc,key):
+            if key=='id':
+                return acc
+            else:    
+                return acc+"{0} {1},".format(key, d[key])
+        s=reduce(getKey, d, "")
         self.mycursor.execute(
             "CREATE TABLE IF NOT EXISTS {0} ({1})".format(self.table,s[:-1])
         )
@@ -43,9 +50,9 @@ class MysqlOp(object):
         )
     def addPrimaryKey(self):
         alter = """
-    ALTER TABLE customers  
+    ALTER TABLE {0}  
     ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY
-"""
+""".format(self.table)
         self.mycursor.execute(alter)
     def insertInto(self, sql, val):
         try:
@@ -55,9 +62,13 @@ class MysqlOp(object):
         except mysql.connector.errors.IntegrityError:
             return 0
     def executemany(self, val):
-        s=str(tuple(self.fields)).replace("'",'')
+        def removeId(item):
+            isinstance(item,dict) and item.pop('id',None)
+            return item
+        val=list(map(removeId,val))
+        s=','.join(self.fields.keys())
         placeholder=', '.join(['%s']*len(self.fields))
-        sql = "INSERT INTO {2} {0} VALUES ({1})".format(s,placeholder,self.table)
+        sql = "INSERT INTO {2} ({0}) VALUES ({1})".format(s,placeholder,self.table)
         try:
             vals=list(map(lambda item:tuple(item.values()) if isinstance(item,dict) else item,val))
             self.mycursor.executemany(sql, vals)
@@ -130,9 +141,12 @@ select max(ID) from {0} group by {1}
         self.mycursor.execute(sql,tuple(d.values()))
         self.mydb.commit()
         return self.mycursor.rowcount
-    def dropTable(self):
-        sql = "DROP TABLE  IF EXISTS  {0}".format(self.table)
-        self.mycursor.execute(sql)
+    def dropTable(self,l=None):
+        if l is None:
+            l=[self.table]
+        for val in l:
+            sql = "DROP TABLE  IF EXISTS  {0}".format(val)
+            self.mycursor.execute(sql)
         return True
     def updateField(self,d):
         sql = "UPDATE {0} SET {1} = %s WHERE {1} = %s".format(self.table,d['field'])

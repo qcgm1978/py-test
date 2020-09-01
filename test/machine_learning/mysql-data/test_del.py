@@ -11,6 +11,6 @@ class TDD_DEL(unittest.TestCase):
         ret1=self.m.delete({'address' : "Yellow Garden 2"})
         self.assertEqual(ret1,1 )
     def test_drop_table(self):
-        self.assertTrue(self.m.dropTable())
+        self.assertTrue(self.m.dropTable(['customers','foo','users','products']))
 if __name__ == '__main__':
     unittest.main()

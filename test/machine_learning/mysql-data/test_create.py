@@ -12,6 +12,11 @@ class TDD_TEST_MYSQL(unittest.TestCase):
             { 'id': 4, 'name': 'Hannah', 'fav':0},
             { 'id': 5, 'name': 'Michael', 'fav':0}
         ])
+        MysqlOp('products',[
+            { 'id': 154, 'name': 'Chocolate Heaven' },
+            { 'id': 155, 'name': 'Tasty Lemons' },
+            { 'id': 156, 'name': 'Vanilla Dreams' }
+        ])
     def test_key(self):
         self.assertRaises(mysql.connector.errors.ProgrammingError, lambda: self.m.createPrimaryKey())
         try:
