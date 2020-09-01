@@ -2,7 +2,7 @@ import unittest,mysql
 from mysqlOp import MysqlOp
 class TDD_TEST_MYSQL(unittest.TestCase):
     def setUp(self):
-        self.m = MysqlOp('customers')
+        self.m = MysqlOp('customers',{'name': 'VARCHAR(255)', 'address': 'VARCHAR(255)'})
         return super().setUp()
     def test_key(self):
         self.assertRaises(mysql.connector.errors.ProgrammingError, lambda: self.m.createPrimaryKey())

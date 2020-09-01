@@ -1,20 +1,23 @@
 from functools import reduce
 import mysql.connector
 class MysqlOp(object):
-    def __init__(self, table):
+    def __init__(self, table,cols=None):
         self.table = table
         self.mydb = mysql.connector.connect(
             host="localhost", user="root", password="test@2018", database="mydatabase"
         )
         self.mycursor = self.mydb.cursor(buffered=True)
+        if isinstance(cols,dict):
+            self.createTable(cols)
     def __del__(self):
         self.mycursor.close()
         self.mydb.close()
     def showTables(self):
         self.mycursor.execute("SHOW TABLES")
-    def createTable(self):
+    def createTable(self,d):
+        s=reduce(lambda acc, key: acc+"{0} {1},".format(key, d[key]), d, "")
         self.mycursor.execute(
-            "CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))"
+            "CREATE TABLE IF NOT EXISTS {0} ({1})".format(self.table,s[:-1])
         )
     def createPrimaryKey(self):
         self.mycursor.execute(
@@ -85,7 +88,7 @@ select max(ID) from {0} group by {1}
         sql = "SELECT * FROM {0} WHERE {1}".format(self.table, s)
         self.mycursor.execute(sql)
         return self.mycursor.fetchall()
-    def getStr(self, d,relation,isWild=False):
+    def getStr(self, d,relation=' ',isWild=False):
         s='%' if isWild else ''
         return reduce(lambda acc, key: "{0} {2} '{3}{1}{3}'".format(key, d[key],relation,s), d, "")
     def escape(self, adr, field="address"):
@@ -104,3 +107,7 @@ select max(ID) from {0} group by {1}
         self.mycursor.execute(sql,tuple(d.values()))
         self.mydb.commit()
         return self.mycursor.rowcount
+    def dropTable(self):
+        sql = "DROP TABLE  IF EXISTS  {0}".format(self.table)
+        self.mycursor.execute(sql)
+        return True
