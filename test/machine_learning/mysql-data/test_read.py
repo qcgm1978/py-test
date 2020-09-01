@@ -41,6 +41,31 @@ class TDD_READ(unittest.TestCase):
         self.assertEqual(s[-1][0],'William')
         self.assertEqual(s1[-1][0],'Amy')
         self.assertEqual(s1[-1][0],s[0][0])
-        self.assertEqual(s1[0][0],s[-1][0])
+        self.assertEqual(s1[0][0], s[-1][0])
+    def test_join(self):
+        MysqlOp('users',[
+            { 'id': 1, 'name': 'John', 'fav': 154},
+            { 'id': 2, 'name': 'Peter', 'fav': 154},
+            { 'id': 3, 'name': 'Amy', 'fav': 155},
+            { 'id': 4, 'name': 'Hannah', 'fav':0},
+            { 'id': 5, 'name': 'Michael', 'fav':0}
+        ])
+        MysqlOp('products',[
+            { 'id': 154, 'name': 'Chocolate Heaven' },
+            { 'id': 155, 'name': 'Tasty Lemons' },
+            { 'id': 156, 'name': 'Vanilla Dreams' }
+        ])
+    
+        j=self.m.join()
+        j1=self.m.join(isLeft=True)
+        j2=self.m.join(isRight=True)
+        self.assertEqual(j,[('John', 'Chocolate Heaven'),
+('Peter', 'Chocolate Heaven'),
+('Amy', 'Tasty Lemons'),
+('John', 'Chocolate Heaven'),
+('Peter', 'Chocolate Heaven'),
+('Amy', 'Tasty Lemons')])
+        self.assertEqual(j1,[('John', 'Chocolate Heaven'), ('Peter', 'Chocolate Heaven'), ('Amy', 'Tasty Lemons'), ('Hannah', None), ('Michael', None), ('John', 'Chocolate Heaven'), ('Peter', 'Chocolate Heaven'), ('Amy', 'Tasty Lemons'), ('Hannah', None), ('Michael', None)])
+        self.assertEqual(j2,[(None, 'Chocolate Heaven'), (None, 'Tasty Lemons'), (None, 'Vanilla Dreams'), (None, 'Chocolate Heaven'), (None, 'Tasty Lemons'), (None, 'Vanilla Dreams'), ('John', 'Chocolate Heaven'), ('Peter', 'Chocolate Heaven'), ('John', 'Chocolate Heaven'), ('Peter', 'Chocolate Heaven'), ('Amy', 'Tasty Lemons'), ('Amy', 'Tasty Lemons'), (None, 'Vanilla Dreams')])
 if __name__ == '__main__':
     unittest.main()

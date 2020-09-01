@@ -4,19 +4,6 @@ class TDD_TEST_MYSQL(unittest.TestCase):
     def setUp(self):
         self.m = MysqlOp('customers',{'name': 'VARCHAR(255)', 'address': 'VARCHAR(255)'})
         return super().setUp()
-    def test_create_table(self):
-        MysqlOp('users',[
-            { 'id': 1, 'name': 'John', 'fav': 154},
-            { 'id': 2, 'name': 'Peter', 'fav': 154},
-            { 'id': 3, 'name': 'Amy', 'fav': 155},
-            { 'id': 4, 'name': 'Hannah', 'fav':0},
-            { 'id': 5, 'name': 'Michael', 'fav':0}
-        ])
-        MysqlOp('products',[
-            { 'id': 154, 'name': 'Chocolate Heaven' },
-            { 'id': 155, 'name': 'Tasty Lemons' },
-            { 'id': 156, 'name': 'Vanilla Dreams' }
-        ])
     def test_key(self):
         self.assertRaises(mysql.connector.errors.ProgrammingError, lambda: self.m.createPrimaryKey())
         try:

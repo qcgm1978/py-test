@@ -9,8 +9,8 @@ class MysqlOp(object):
         self.mycursor = self.mydb.cursor(buffered=True)
         if isinstance(cols,dict):
             self.createTable(cols)
+            self.addPrimaryKey()
             self.fields = cols
-            self.fields.pop('id',None)
             if isinstance(val,list):
                 self.executemany(val)
         elif isinstance(cols,list):
@@ -18,8 +18,8 @@ class MysqlOp(object):
             if isinstance(fields,dict):
                 d=self.getFields(fields)
                 self.fields = d
-                self.fields.pop('id',None)
                 self.createTable(d)
+                self.addPrimaryKey()
                 self.executemany(cols)
     def __del__(self):
         self.mycursor.close()
@@ -36,9 +36,6 @@ class MysqlOp(object):
         self.mycursor.execute("SHOW TABLES")
     def createTable(self,d):
         def getKey(acc,key):
-            if key=='id':
-                return acc
-            else:    
                 return acc+"{0} {1},".format(key, d[key])
         s=reduce(getKey, d, "")
         self.mycursor.execute(
@@ -51,9 +48,13 @@ class MysqlOp(object):
     def addPrimaryKey(self):
         alter = """
     ALTER TABLE {0}  
-    ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY
-""".format(self.table)
-        self.mycursor.execute(alter)
+    ADD PRIMARY KEY (id)
+""" .format(self.table)
+        try:
+            self.mycursor.execute(alter)
+            return True
+        except mysql.connector.errors.ProgrammingError:
+            return False
     def insertInto(self, sql, val):
         try:
             self.mycursor.execute(sql, val)
@@ -62,10 +63,6 @@ class MysqlOp(object):
         except mysql.connector.errors.IntegrityError:
             return 0
     def executemany(self, val):
-        def removeId(item):
-            isinstance(item,dict) and item.pop('id',None)
-            return item
-        val=list(map(removeId,val))
         s=','.join(self.fields.keys())
         placeholder=', '.join(['%s']*len(self.fields))
         sql = "INSERT INTO {2} ({0}) VALUES ({1})".format(s,placeholder,self.table)
@@ -153,3 +150,24 @@ select max(ID) from {0} group by {1}
         self.mycursor.execute(sql,(d['to'],d['from']))
         self.mydb.commit()
         return self.mycursor.rowcount
+    def join(self, isLeft=False,isRight=False):
+        if isLeft:
+            sql = "SELECT \
+  users.name AS user, \
+  products.name AS favorite \
+  FROM users \
+  LEFT JOIN products ON users.fav = products.id"
+        elif isRight:
+            sql = "SELECT \
+  users.name AS user, \
+  products.name AS favorite \
+  FROM users \
+  RIGHT JOIN products ON users.fav = products.id"
+        else:
+            sql = "SELECT \
+  users.name AS user, \
+  products.name AS favorite \
+  FROM users \
+  INNER JOIN products ON users.fav = products.id"
+        self.mycursor.execute(sql)
+        return self. mycursor.fetchall()
