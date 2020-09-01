@@ -1,7 +1,7 @@
 from functools import reduce
 import mysql.connector
 class MysqlOp(object):
-    def __init__(self, table,cols=None):
+    def __init__(self, table,cols=None,val=None):
         self.table = table
         self.mydb = mysql.connector.connect(
             host="localhost", user="root", password="test@2018", database="mydatabase"
@@ -9,9 +9,27 @@ class MysqlOp(object):
         self.mycursor = self.mydb.cursor(buffered=True)
         if isinstance(cols,dict):
             self.createTable(cols)
+            self.fields=cols
+            if isinstance(val,list):
+                self.executemany(val)
+        elif isinstance(cols,list):
+            fields=cols[0]
+            if isinstance(fields,dict):
+                d=self.getFields(fields)
+                self.fields=d
+                self.createTable(d)
+                self.executemany(cols)
     def __del__(self):
         self.mycursor.close()
         self.mydb.close()
+    def getFields(self,d):
+        r={}
+        for key,val in d.items():
+            if isinstance(val,int):
+                r[key]='INT'
+            elif isinstance(val,str):
+                r[key]='VARCHAR(255)'
+        return r
     def showTables(self):
         self.mycursor.execute("SHOW TABLES")
     def createTable(self,d):
@@ -37,15 +55,20 @@ class MysqlOp(object):
         except mysql.connector.errors.IntegrityError:
             return 0
     def executemany(self, val):
-        sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
+        s=str(tuple(self.fields)).replace("'",'')
+        placeholder=', '.join(['%s']*len(self.fields))
+        sql = "INSERT INTO {2} {0} VALUES ({1})".format(s,placeholder,self.table)
         try:
-            self.mycursor.executemany(sql, val)
+            vals=list(map(lambda item:tuple(item.values()) if isinstance(item,dict) else item,val))
+            self.mycursor.executemany(sql, vals)
             self.mydb.commit()
             return 1
         except mysql.connector.errors.IntegrityError:
             return 0
-    def select(self):
-        self.mycursor.execute("SELECT * FROM {0}".format(self.table))
+    def select(self ,limit=None,offset=None):
+        o='OFFSET '+str(offset) if offset else ''
+        s='LIMIT '+str(limit) if limit else ''
+        self.mycursor.execute("SELECT * FROM {0} {1} {2}".format(self.table,s,o))
         myresult = self.mycursor.fetchall()
         return myresult
     def getRowsCount(self):
@@ -58,7 +81,7 @@ class MysqlOp(object):
     def fetchOne(self):
         self.mycursor.execute("SELECT * FROM {0}".format(self.table))
         return self.mycursor.fetchone()
-    def where(self, d):
+    def where(self, d,offset=0):
         s = reduce(lambda acc, key: "{0} = '{1}'".format(key, d[key]), d, "")
         sql = "SELECT * FROM customers WHERE {0}".format(s)
         self.mycursor.execute(sql)

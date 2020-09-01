@@ -2,9 +2,8 @@ from mysqlOp import MysqlOp
 import unittest
 class TDD_DEL(unittest.TestCase):
     def setUp(self):
-        self.m = MysqlOp('customers',{'name': 'VARCHAR(255)', 'address': 'VARCHAR(255)'})
-        val = [("John", "Mountain 21"),('Joe',"Yellow Garden 2")]
-        self.m.executemany(val)
+        val = [{'name':"John",'address': "Mountain 21"},{'name':'Joe','address':"Yellow Garden 2"}]
+        self.m = MysqlOp('foo',val)
         return super().setUp()
     def test_del(self):
         ret=self.m.delete({'address' : 'Mountain 21'})

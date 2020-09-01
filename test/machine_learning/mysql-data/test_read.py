@@ -8,10 +8,14 @@ class TDD_READ(unittest.TestCase):
         self.m.showTables()
         self.assertIsInstance(self.m.mycursor, object)
         for k in self.m.mycursor:
-            self.assertEqual(k, ('customers',))
+            self.assertTrue(k in [('customers',),('users',)])
     def test_select(self):
         s = self.m.select()
         self.assertEqual(len(s),self.m.mycursor.rowcount)
+        s1 = self.m.select(limit=1)
+        s2 = self.m.select(limit=2,offset=12)
+        self.assertEqual(len(s1),1)
+        self.assertEqual(len(s2),2)
         self.assertEqual(len(s),self.m.getRowsCount())
         first=('John', 'Highway 21')
         self.assertEqual(s[0][:2],first)
@@ -20,6 +24,7 @@ class TDD_READ(unittest.TestCase):
         self.assertEqual(self.m.fetchOne()[:2], first)
     def test_filter(self):
         f=self.m.where({'address' :'Park Lane 38'})
+        f1=self.m.where({'address' :'Park Lane 38'})
         self.assertEqual(f[0][:2],('Ben', 'Park Lane 38'))
     def test_wild(self):
         w=self.m.wild({'address':'way'})
