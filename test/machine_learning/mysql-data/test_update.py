@@ -4,17 +4,14 @@ class TDD_TEST_MYSQL(unittest.TestCase):
     def setUp(self):
         self.m = MysqlOp('customers')
         return super().setUp()
-    def test_test_mysql(self):
-        self.m.showTables()
-        self.assertIsInstance(self.m.mycursor, object)
-        for k in self.m.mycursor:
-            self.assertEqual(k, ('customers',))
     def test_key(self):
         self.assertRaises(mysql.connector.errors.ProgrammingError, lambda: self.m.createPrimaryKey())
         try:
-            self.m.alterTable()
+            self.m.addPrimaryKey()
         except mysql.connector.errors.ProgrammingError:
             pass
+    def test_unique(self):
+        self.assertIsNone(self.m.unique('address'))
     def test_insert(self):
         sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
         val = ("John", "Highway 21")
@@ -42,6 +39,5 @@ class TDD_TEST_MYSQL(unittest.TestCase):
         val = ("Michelle", "Blue Village")
         self.m.insertInto(sql, val)
         self.assertIsInstance( self.m.mycursor.lastrowid,int)
-    
 if __name__ == '__main__':
     unittest.main()
