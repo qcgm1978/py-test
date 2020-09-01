@@ -13,21 +13,22 @@ class TDD_READ(unittest.TestCase):
         s = self.m.select()
         self.assertEqual(len(s),self.m.mycursor.rowcount)
         self.assertEqual(len(s),self.m.getRowsCount())
-        first=('John', 'Highway 21', 441)
-        self.assertEqual(s[0],first)
+        first=('John', 'Highway 21')
+        self.assertEqual(s[0][:2],first)
         s1 = self.m.selectColumns(['name', 'address'])
         self.assertEqual(s1[0],('John', 'Highway 21'))
-        self.assertEqual(self.m.fetchOne(), first)
+        self.assertEqual(self.m.fetchOne()[:2], first)
     def test_filter(self):
         f=self.m.where({'address' :'Park Lane 38'})
-        self.assertEqual(f,[('Ben', 'Park Lane 38', 451)])
+        self.assertEqual(f[0][:2],('Ben', 'Park Lane 38'))
     def test_wild(self):
         w=self.m.wild({'address':'way'})
-        self.assertEqual(w,[('John', 'Highway 21', 441), ('Susan', 'One way 98', 449), ('Viola', 'Sideway 1633', 454)])
+        w=map(lambda item:item[:2],w)
+        self.assertEqual(list(w),[('John', 'Highway 21'), ('Susan', 'One way 98'), ('Viola', 'Sideway 1633')])
     def test_escape(self):
         adr = ("Yellow Garden 2", )
         e=self.m.escape(adr)
-        self.assertEqual(e,[('Vicky', 'Yellow Garden 2', 450)])
+        self.assertEqual(e[0][:2],('Vicky', 'Yellow Garden 2'))
     def test_sort(self):
         s=self.m.sort('name')
         s1=self.m.sort('name',True)
