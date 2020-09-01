@@ -111,3 +111,8 @@ select max(ID) from {0} group by {1}
         sql = "DROP TABLE  IF EXISTS  {0}".format(self.table)
         self.mycursor.execute(sql)
         return True
+    def updateField(self,d):
+        sql = "UPDATE {0} SET {1} = %s WHERE {1} = %s".format(self.table,d['field'])
+        self.mycursor.execute(sql,(d['to'],d['from']))
+        self.mydb.commit()
+        return self.mycursor.rowcount
