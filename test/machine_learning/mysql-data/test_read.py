@@ -12,6 +12,7 @@ class TDD_READ(unittest.TestCase):
     def test_select(self):
         s = self.m.select()
         self.assertEqual(len(s),self.m.mycursor.rowcount)
+        self.assertEqual(len(s),self.m.getRowsCount())
         first=('John', 'Highway 21', 441)
         self.assertEqual(s[0],first)
         s1 = self.m.selectColumns(['name', 'address'])
