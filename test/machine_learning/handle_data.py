@@ -7,8 +7,10 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from mathMethods.doMath import DoMath
 from do_statistics.doStats import DoStats
-class HandleData(DoMath,DoStats):
+from mysql_data.mysqlOp import MysqlOp
+class HandleData(DoMath,DoStats,MysqlOp):
     def __init__(self, n=None):
+        MysqlOp.__init__(self,'data',n['sqlData'],db='machine_learning')
         if isinstance(n, dict):
             self.info = n
             listProp = list(

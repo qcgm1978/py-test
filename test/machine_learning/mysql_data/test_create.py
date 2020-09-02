@@ -13,9 +13,8 @@ class TDD_TEST_MYSQL(unittest.TestCase):
     def test_unique(self):
         self.assertIsNone(self.m.unique('address'))
     def test_insert(self):
-        sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
         val = ("John", "Highway 21")
-        r=self.m.insertInto(sql,val)
+        r=self.m.insertInto(val)
         self.assertEqual(self.m.mycursor.rowcount, 1 if r else -1)
         val = [
         ('Peter', 'Lowstreet 4'),
@@ -37,7 +36,7 @@ class TDD_TEST_MYSQL(unittest.TestCase):
     def test_insert_id(self):
         sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
         val = ("Michelle", "Blue Village")
-        self.m.insertInto(sql, val)
+        self.m.insertInto( val)
         self.assertIsInstance( self.m.mycursor.lastrowid,int)
 if __name__ == '__main__':
     unittest.main()

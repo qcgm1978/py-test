@@ -4,6 +4,7 @@ class TDD_DEL(unittest.TestCase):
     def setUp(self):
         val = [{'name':"John",'address': "Mountain 21"},{'name':'Joe','address':"Yellow Garden 2"}]
         self.m = MysqlOp('foo',val)
+        self.m1 = MysqlOp('data',val,db='machine_learning')
         return super().setUp()
     def test_del(self):
         ret=self.m.delete({'address' : 'Mountain 21'})
@@ -12,5 +13,6 @@ class TDD_DEL(unittest.TestCase):
         self.assertEqual(ret1,1 )
     def test_drop_table(self):
         self.assertTrue(self.m.dropTable(['customers','foo','users','products']))
+        self.assertTrue(self.m1.dropTable(['data']))
 if __name__ == '__main__':
     unittest.main()

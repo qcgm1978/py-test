@@ -1,13 +1,10 @@
 # pandas is an open source, BSD-licensed library providing high-performance, easy-to-use data structures and data analysis tools for the Python programming language.
 import unittest, pandas as pd
 import numpy as np
-
-
 class TDD_DATAFRAME(unittest.TestCase):
     # First define a class variable that determines
     # if setUp was ever run
     ClassIsSetup = False
-
     def setUp(self):
         # If it was not setup yet, do it
         if not self.ClassIsSetup:
@@ -24,7 +21,6 @@ class TDD_DATAFRAME(unittest.TestCase):
             # remember that it was setup already
             self.__class__.ClassIsSetup = True
             return super().setUp()
-
     # pandas.DataFrame.loc
     # property DataFrame.loc
     # Access a group of rows and columns by label(s) or a boolean array.
@@ -45,7 +41,6 @@ class TDD_DATAFRAME(unittest.TestCase):
         self.assertEqual(list(l.values[0]), [5, 8])
         # http://scrapingauthority.com/pandas-dataframe-filtering/
         # 7 Ways To Filter A Pandas Dataframe
-
     def test_get_columns(self):
         n = self.df["name"]
         self.assertEqual(list(n), ["Jack", "Frank", "Kelly", "Rebecca", "Monica"])
@@ -61,7 +56,6 @@ class TDD_DATAFRAME(unittest.TestCase):
                 ["Monica", 0],
             ],
         )
-
     def test_filter_rows_where(self):
         df = self.df
         g = df[df["year"] > 2012]
@@ -70,7 +64,6 @@ class TDD_DATAFRAME(unittest.TestCase):
         )
         t = df[(df["year"] > 2012) & (df["reports"] < 30)]
         self.assertEqual(t.values.tolist(), [["Jack", 2015, 24.0]])
-
     def test_first_last_rows(self):
         df = self.df
         t = df[:2]
@@ -79,7 +72,6 @@ class TDD_DATAFRAME(unittest.TestCase):
         l = df[-1:]
         self.assertEqual(l.values.tolist(), [["Monica", 0, 0]])
         self.assertRaises(KeyError, lambda: df[-1])
-
     def test_query_string(self):
         df = self.df
         q = df.query('year > 2012 | name == "Frank"')
@@ -87,7 +79,6 @@ class TDD_DATAFRAME(unittest.TestCase):
             q.values.tolist(),
             [["Jack", 2015, 24], ["Frank", 2011, 4], ["Rebecca", 2014, 31]],
         )
-
     def test_WhereValueIsInSpecifiedList(self):
         df = self.df
         numbers = [4, 2]

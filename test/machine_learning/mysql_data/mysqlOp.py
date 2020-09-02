@@ -1,15 +1,16 @@
 from functools import reduce
 import mysql.connector
 class MysqlOp(object):
-    def __init__(self, table,cols=None,val=None):
+    def __init__(self, table,cols=None,val=None,db='mydatabase',unique=None):
         self.table = table
         self.mydb = mysql.connector.connect(
-            host="localhost", user="root", password="test@2018", database="mydatabase"
+            host="localhost", user="root", password="test@2018",database=db
         )
         self.mycursor = self.mydb.cursor(buffered=True)
         if isinstance(cols,dict):
             self.createTable(cols)
             self.addPrimaryKey()
+            unique and self.unique(unique)
             self.fields = cols
             if isinstance(val,list):
                 self.executemany(val)
@@ -20,10 +21,14 @@ class MysqlOp(object):
                 self.fields = d
                 self.createTable(d)
                 self.addPrimaryKey()
+                unique and self.unique(unique)
                 self.executemany(cols)
     def __del__(self):
-        self.mycursor.close()
-        self.mydb.close()
+        try:
+            self.mycursor.close()
+            self.mydb.close()
+        except ReferenceError:
+            pass
     def getFields(self,d):
         r={}
         for key,val in d.items():
@@ -46,29 +51,36 @@ class MysqlOp(object):
             "CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))"
         )
     def addPrimaryKey(self):
-        alter = """
-    ALTER TABLE {0}  
-    ADD PRIMARY KEY (id)
-""" .format(self.table)
+        if 'id' in self.fields:
+            alter = """
+                ALTER TABLE {0}  
+                ADD PRIMARY KEY (id)
+            """ .format(self.table)
+        else:
+            alter='ALTER TABLE {0} ADD id INT AUTO_INCREMENT PRIMARY KEY'.format(self.table)
         try:
             self.mycursor.execute(alter)
             return True
         except mysql.connector.errors.ProgrammingError:
             return False
-    def insertInto(self, sql, val):
-        try:
-            self.mycursor.execute(sql, val)
-            self.mydb.commit()
-            return 1
-        except mysql.connector.errors.IntegrityError:
-            return 0
-    def executemany(self, val):
+        finally:
+            self.fields.pop('id',None)
+    def insertInto(self, val):
+            return self.executemany( val,isMany=False)
+    def executemany(self, val, isMany=True):
+        def pop(item):
+            item.pop('id', None)
+            return item
+        if isMany:
+            val = list(map(pop, val))
+        else:
+            val=pop(val)
         s=','.join(self.fields.keys())
         placeholder=', '.join(['%s']*len(self.fields))
         sql = "INSERT INTO {2} ({0}) VALUES ({1})".format(s,placeholder,self.table)
         try:
             vals=list(map(lambda item:tuple(item.values()) if isinstance(item,dict) else item,val))
-            self.mycursor.executemany(sql, vals)
+            (self.mycursor.executemany if isMany else self.mycursor.execute)(sql, vals)
             self.mydb.commit()
             return 1
         except mysql.connector.errors.IntegrityError:

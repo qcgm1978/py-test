@@ -9,24 +9,6 @@ class TDD_DECISION_TREE(unittest.TestCase):
         mapData = {"Nationality": d1, "Go": d2}
         self.d = DataTypes({"file": file, "mapData": mapData,'target':"Go"})
         return super().setUp()
-    def test_read_data_set(self):
-        file = "test/machine_learning/shows.csv"
-        d = DataTypes({"file": file})
-        df = d.readCsv(file)
-        # print(df)
-        data = np.array(df)
-        self.assertIsInstance(data, np.ndarray)
-        self.assertEqual(data.ndim, 2)
-        self.assertEqual(data.shape, (13, 6))
-        self.assertEqual(data.size, data.shape[0] * data.shape[1])
-        d1 = {"UK": 0, "USA": 1, "N": 2}
-        d2 = {"YES": 1, "NO": 0}
-        df = d.mapStrToNum({"Nationality": d1, "Go": d2})
-        features = ["Age", "Experience", "Rank", "Nationality"]
-        X = df[features]
-        y = df["Go"]
-        # print(X)
-        # print(y)
     def test_decision_tree(self):
         file = "test/machine_learning/shows.csv"
         img = "test/machine_learning/mydecisiontree.png"
