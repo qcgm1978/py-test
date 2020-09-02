@@ -1,5 +1,6 @@
 .vscode/settings.json
 node_modules
+venv
 .venv
 .VSCodeCounter
 package-lock.json

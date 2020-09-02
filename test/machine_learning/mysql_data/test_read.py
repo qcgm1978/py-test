@@ -1,13 +1,15 @@
+import sys
+# sys.path.append("/Users/zhanghongliang/Documents/py-test/test/machine_learning")
 import unittest
 from mysqlOp import MysqlOp
+from decorators import logit 
+from decorators_func import decorator_factory 
 class TDD_READ(unittest.TestCase):
-    ClassIsSetup = False
+    @decorator_factory({'isIni':True})
+    # @logit
     def setUp(self):
-        # If it was not setup yet, do it
-        if not self.ClassIsSetup:
             val = [{'name':"John",'address': "Mountain 21"},{'name':'Joe','address':"Yellow Garden 2"},{'name':'Ben','address' :'Park Lane 38'},{'name':'John', 'address':'Highway 21'}]
             self.__class__.m = MysqlOp('customers',val,unique='address')
-            self.__class__.ClassIsSetup = True
             return super().setUp()
     def test_table(self):
         self.m.showTables()
