@@ -1,25 +1,27 @@
 from functools import reduce
 import mysql.connector
 class MysqlOp(object):
-    def __init__(self, table,cols=None,val=None,db='mydatabase',unique=None):
+    def __init__(self, table, cols=None, val=None, db="mydatabase", unique=None):
         self.table = table
+        self.db=db
         self.mydb = mysql.connector.connect(
-            host="localhost", user="root", password="test@2018",database=db
+            host="localhost", user="root", password="test@2018", database=self.db
         )
         self.mycursor = self.mydb.cursor(buffered=True)
-        if isinstance(cols,dict):
+        if isinstance(cols, dict):
             self.createTable(cols)
             self.addPrimaryKey()
             unique and self.unique(unique)
             self.fields = cols
-            if isinstance(val,list):
+            if isinstance(val, list):
                 self.executemany(val)
-        elif isinstance(cols,list):
-            fields=cols[0]
-            if isinstance(fields,dict):
-                d=self.getFields(fields)
+        elif isinstance(cols, list):
+            fields = cols[0]
+            if isinstance(fields, dict):
+                d = self.getFields(fields)
                 self.fields = d
                 self.createTable(d)
+                self.createCols()
                 self.addPrimaryKey()
                 unique and self.unique(unique)
                 self.executemany(cols)
@@ -29,66 +31,92 @@ class MysqlOp(object):
             self.mydb.close()
         except ReferenceError:
             pass
-    def getFields(self,d):
-        r={}
-        for key,val in d.items():
-            if isinstance(val,int):
-                r[key]='INT'
-            elif isinstance(val,str):
-                r[key]='VARCHAR(255)'
+    def getFields(self, d):
+        r = {}
+        for key, val in d.items():
+            if isinstance(val, int):
+                r[key] = "INT"
+            elif isinstance(val, str):
+                r[key] = "VARCHAR(255)"
+            elif isinstance(val, list):
+                r[key] = "JSON"
         return r
     def showTables(self):
         self.mycursor.execute("SHOW TABLES")
-    def createTable(self,d):
-        def getKey(acc,key):
-                return acc+"{0} {1},".format(key, d[key])
-        s=reduce(getKey, d, "")
+    def createCols(self):
+        sql="SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'".format(self.table,'address')
+        self.mycursor.execute(sql)
+        RESULT=self.mycursor.fetchall()
+        if(RESULT==[(0,)]):
+            sql="ALTER TABLE {0} ADD COLUMN {1} varchar(20)".format(self.table,'address')
+            self.mycursor.execute(sql)
+    def createTable(self, d):
+        def getKey(acc, key):
+            return acc + "{0} {1},".format(key, d[key])
+        s = reduce(getKey, d, "")
         self.mycursor.execute(
-            "CREATE TABLE IF NOT EXISTS {0} ({1})".format(self.table,s[:-1])
+            "CREATE TABLE IF NOT EXISTS {0} ({1})".format(self.table, s[:-1])
         )
     def createPrimaryKey(self):
         self.mycursor.execute(
             "CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))"
         )
     def addPrimaryKey(self):
-        if 'id' in self.fields:
+        if "id" in self.fields:
             alter = """
                 ALTER TABLE {0}  
                 ADD PRIMARY KEY (id)
-            """ .format(self.table)
+            """.format(
+                self.table
+            )
         else:
-            alter='ALTER TABLE {0} ADD id INT AUTO_INCREMENT PRIMARY KEY'.format(self.table)
+            alter = "ALTER TABLE {0} ADD id INT AUTO_INCREMENT PRIMARY KEY".format(
+                self.table
+            )
         try:
             self.mycursor.execute(alter)
             return True
         except mysql.connector.errors.ProgrammingError:
             return False
         finally:
-            self.fields.pop('id',None)
+            self.fields.pop("id", None)
     def insertInto(self, val):
-            return self.executemany( val,isMany=False)
+        return self.executemany(val, isMany=False)
+    def valConvert(self, item):
+        if isinstance(item, dict):
+            val = item.values()
+            l = list(val)[0]
+            if isinstance(l,list):
+                s = json.dumps(l)
+                ret =( json.loads(s),)
+            else:
+                ret = tuple(val)
+        else:
+            ret = item
+        return ret
     def executemany(self, val, isMany=True):
         def pop(item):
-            item.pop('id', None)
+            item.pop("id", None)
             return item
         if isMany:
             val = list(map(pop, val))
         else:
-            val=pop(val)
-        s=','.join(self.fields.keys())
-        placeholder=', '.join(['%s']*len(self.fields))
-        sql = "INSERT INTO {2} ({0}) VALUES ({1})".format(s,placeholder,self.table)
+            val = pop(val)
+        s = ",".join(self.fields.keys())
+        placeholder = ", ".join(["%s"] * len(self.fields))
+        sql = "INSERT INTO {2} ({0}) VALUES  ({1})".format(s, placeholder, self.table)
         try:
-            vals=list(map(lambda item:tuple(item.values()) if isinstance(item,dict) else item,val))
-            (self.mycursor.executemany if isMany else self.mycursor.execute)(sql, vals)
+            vals = list(map(self.valConvert, val))
+            func = self.mycursor.executemany if isMany else self.mycursor.execute
+            func(sql, vals)
             self.mydb.commit()
             return 1
         except mysql.connector.errors.IntegrityError:
             return 0
-    def select(self ,limit=None,offset=None):
-        o='OFFSET '+str(offset) if offset else ''
-        s='LIMIT '+str(limit) if limit else ''
-        self.mycursor.execute("SELECT * FROM {0} {1} {2}".format(self.table,s,o))
+    def select(self, limit=None, offset=None):
+        o = "OFFSET " + str(offset) if offset else ""
+        s = "LIMIT " + str(limit) if limit else ""
+        self.mycursor.execute("SELECT * FROM {0} {1} {2}".format(self.table, s, o))
         myresult = self.mycursor.fetchall()
         return myresult
     def getRowsCount(self):
@@ -101,7 +129,7 @@ class MysqlOp(object):
     def fetchOne(self):
         self.mycursor.execute("SELECT * FROM {0}".format(self.table))
         return self.mycursor.fetchone()
-    def where(self, d,offset=0):
+    def where(self, d, offset=0):
         s = reduce(lambda acc, key: "{0} = '{1}'".format(key, d[key]), d, "")
         sql = "SELECT * FROM customers WHERE {0}".format(s)
         self.mycursor.execute(sql)
@@ -127,13 +155,17 @@ select max(ID) from {0} group by {1}
         except mysql.connector.errors.ProgrammingError:
             return None
     def wild(self, d):
-        s = self.getStr(d,'LIKE',True)
+        s = self.getStr(d, "LIKE", True)
         sql = "SELECT * FROM {0} WHERE {1}".format(self.table, s)
         self.mycursor.execute(sql)
         return self.mycursor.fetchall()
-    def getStr(self, d,relation=' ',isWild=False):
-        s='%' if isWild else ''
-        return reduce(lambda acc, key: "{0} {2} '{3}{1}{3}'".format(key, d[key],relation,s), d, "")
+    def getStr(self, d, relation=" ", isWild=False):
+        s = "%" if isWild else ""
+        return reduce(
+            lambda acc, key: "{0} {2} '{3}{1}{3}'".format(key, d[key], relation, s),
+            d,
+            "",
+        )
     def escape(self, adr, field="address"):
         sql = "SELECT * FROM {0} WHERE {1} = %s".format(self.table, field)
         self.mycursor.execute(sql, adr)
@@ -144,25 +176,25 @@ select max(ID) from {0} group by {1}
         )
         self.mycursor.execute(sql)
         return self.mycursor.fetchall()
-    def delete(self,d):
-        s=reduce(lambda acc, key: "{0} = %s".format(key),d, "")
-        sql = "DELETE FROM {0} WHERE {1}".format(self.table,s)
-        self.mycursor.execute(sql,tuple(d.values()))
+    def delete(self, d):
+        s = reduce(lambda acc, key: "{0} = %s".format(key), d, "")
+        sql = "DELETE FROM {0} WHERE {1}".format(self.table, s)
+        self.mycursor.execute(sql, tuple(d.values()))
         self.mydb.commit()
         return self.mycursor.rowcount
-    def dropTable(self,l=None):
+    def dropTable(self, l=None):
         if l is None:
-            l=[self.table]
+            l = [self.table]
         for val in l:
             sql = "DROP TABLE  IF EXISTS  {0}".format(val)
             self.mycursor.execute(sql)
         return True
-    def updateField(self,d):
-        sql = "UPDATE {0} SET {1} = %s WHERE {1} = %s".format(self.table,d['field'])
-        self.mycursor.execute(sql,(d['to'],d['from']))
+    def updateField(self, d):
+        sql = "UPDATE {0} SET {1} = %s WHERE {1} = %s".format(self.table, d["field"])
+        self.mycursor.execute(sql, (d["to"], d["from"]))
         self.mydb.commit()
         return self.mycursor.rowcount
-    def join(self, isLeft=False,isRight=False):
+    def join(self, isLeft=False, isRight=False):
         if isLeft:
             sql = "SELECT \
   users.name AS user, \
@@ -182,4 +214,4 @@ select max(ID) from {0} group by {1}
   FROM users \
   INNER JOIN products ON users.fav = products.id"
         self.mycursor.execute(sql)
-        return self. mycursor.fetchall()
+        return self.mycursor.fetchall()

@@ -1,5 +1,3 @@
-import sys
-# sys.path.append("/Users/zhanghongliang/Documents/py-test/test/machine_learning")
 import unittest
 from mysqlOp import MysqlOp
 from decorators_func import singleton 
@@ -13,7 +11,7 @@ class TDD_READ(unittest.TestCase):
         self.m.showTables()
         self.assertIsInstance(self.m.mycursor, object)
         for k in self.m.mycursor:
-            self.assertTrue(k in [('customers',),('users',),('products',)])
+            self.assertTrue(k in [('foo',),('customers',),('users',),('products',)])
     def test_select(self):
         s = self.m.select()
         self.assertEqual(len(s),self.m.mycursor.rowcount)

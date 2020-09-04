@@ -1,7 +1,6 @@
 # Machine Learning is making the computer learn from studying data and statistics.
-import pandas
+import pandas,json,pydotplus
 import numpy as np
-import pydotplus
 import matplotlib.image as pltimg
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
@@ -30,6 +29,7 @@ class HandleData(DoMath,DoStats,MysqlOp):
                     self.df = self.mapStrToNum(n["mapData"])
         else:
             self.n = n
+    
     def __getitem__(self, i):
         try:
             return self.info[i]
