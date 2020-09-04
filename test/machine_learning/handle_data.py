@@ -12,6 +12,8 @@ class HandleData(DoMath,DoStats,MysqlOp):
         unique=n['unique'] if 'unique' in n else None
         MysqlOp.__init__(self,'data',n['sqlData'],db='machine_learning',unique=unique)
         if isinstance(n, dict):
+            if 'sqlData' in n:
+                n=n['sqlData'][0]
             self.info = n
             listProp = list(
                 filter(
