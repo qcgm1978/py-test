@@ -8,7 +8,6 @@
 			"args": [
 				"${file}"
 			],
-			"problemMatcher": [],
 			"group": {
 				"kind": "build",
 				"isDefault": true
