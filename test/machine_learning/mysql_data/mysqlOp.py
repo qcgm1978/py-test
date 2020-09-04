@@ -1,5 +1,5 @@
 from functools import reduce
-import mysql.connector
+import mysql.connector,json
 class MysqlOp(object):
     def __init__(self, table, cols=None, val=None, db="mydatabase", unique=None):
         self.table = table
@@ -21,7 +21,7 @@ class MysqlOp(object):
                 d = self.getFields(fields)
                 self.fields = d
                 self.createTable(d)
-                self.createCols()
+                self.addCols()
                 self.addPrimaryKey()
                 unique and self.unique(unique)
                 self.executemany(cols)
@@ -30,6 +30,8 @@ class MysqlOp(object):
             self.mycursor.close()
             self.mydb.close()
         except ReferenceError:
+            pass
+        except AttributeError:
             pass
     def getFields(self, d):
         r = {}
@@ -43,13 +45,14 @@ class MysqlOp(object):
         return r
     def showTables(self):
         self.mycursor.execute("SHOW TABLES")
-    def createCols(self):
-        sql="SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'".format(self.table,'address')
-        self.mycursor.execute(sql)
-        RESULT=self.mycursor.fetchall()
-        if(RESULT==[(0,)]):
-            sql="ALTER TABLE {0} ADD COLUMN {1} varchar(20)".format(self.table,'address')
+    def addCols(self):
+        for key,val in self.fields.items():
+            sql="SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}' AND COLUMN_NAME = '{1}'".format(self.table,key)
             self.mycursor.execute(sql)
+            RESULT=self.mycursor.fetchall()
+            if(RESULT==[(0,)]):
+                sql="ALTER TABLE {0} ADD COLUMN {1} {2}".format(self.table,key,val)
+                self.mycursor.execute(sql)
     def createTable(self, d):
         def getKey(acc, key):
             return acc + "{0} {1},".format(key, d[key])
@@ -88,7 +91,7 @@ class MysqlOp(object):
             l = list(val)[0]
             if isinstance(l,list):
                 s = json.dumps(l)
-                ret =( json.loads(s),)
+                ret =( s,)
             else:
                 ret = tuple(val)
         else:
@@ -146,14 +149,17 @@ select max(ID) from {0} group by {1}
         )
         self.mycursor.execute(sql)
     def unique(self, colName):
-        self.ignore(colName)
-        sql = "ALTER  TABLE {0} ADD UNIQUE unique_index  ({1})".format(
-            self.table, colName
-        )
-        try:
-            self.mycursor.execute(sql)
-        except mysql.connector.errors.ProgrammingError:
-            return None
+        if isinstance(colName,str):
+            colName=[colName]
+        for i in colName:
+            self.ignore(i)
+            sql = "ALTER  TABLE {0} ADD UNIQUE unique_index  ({1})".format(
+                self.table, i
+            )
+            try:
+                self.mycursor.execute(sql)
+            except mysql.connector.errors.ProgrammingError:
+                return None
     def wild(self, d):
         s = self.getStr(d, "LIKE", True)
         sql = "SELECT * FROM {0} WHERE {1}".format(self.table, s)

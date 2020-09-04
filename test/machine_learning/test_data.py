@@ -7,6 +7,6 @@ class TDD_TEST_DATA(unittest.TestCase):
         sqlData=[
             { 'speed':[99,86,87,88,111,86,103,87,94,78,77,85,86]}
         ]
-        d = DataTypes({'sqlData':sqlData})
+        d = DataTypes({'sqlData':sqlData,'unique':['address','speed']})
 if __name__ == '__main__':
     unittest.main()

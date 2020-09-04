@@ -1,5 +1,5 @@
 # Machine Learning is making the computer learn from studying data and statistics.
-import pandas,json,pydotplus
+import pandas,pydotplus
 import numpy as np
 import matplotlib.image as pltimg
 import matplotlib.pyplot as plt
@@ -9,7 +9,8 @@ from do_statistics.doStats import DoStats
 from mysql_data.mysqlOp import MysqlOp
 class HandleData(DoMath,DoStats,MysqlOp):
     def __init__(self, n=None):
-        MysqlOp.__init__(self,'data',n['sqlData'],db='machine_learning')
+        unique=n['unique'] if 'unique' in n else None
+        MysqlOp.__init__(self,'data',n['sqlData'],db='machine_learning',unique=unique)
         if isinstance(n, dict):
             self.info = n
             listProp = list(
