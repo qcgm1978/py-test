@@ -217,11 +217,11 @@ select max(ID) from {0} group by {1}
         if "field" in d:
             d1 = {d["field"]: fro}
         count = self.where(d1)
+        to = d["to"]
         if count:
             sql = "UPDATE {0} SET {1} = %s WHERE {1} = %s".format(
                 self.table, d["field"]
             )
-            to = d["to"]
             if isinstance(to, list):
                 to = json.dumps(to)
                 fro = json.dumps(fro)
@@ -229,7 +229,7 @@ select max(ID) from {0} group by {1}
             self.mydb.commit()
             return self.mycursor.rowcount
         else:
-            return self.insertInto(d1)
+            return self.insertInto({d["field"]: to})
     def join(self, isLeft=False, isRight=False):
         if isLeft:
             sql = "SELECT \
