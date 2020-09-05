@@ -71,9 +71,9 @@ class TDD_GETTING_STARTED(unittest.TestCase):
         isfloat = all(isinstance(v, float) for v in x)
         self.assertTrue(isfloat)
     def test_histogram(self):
-        # x = numpy.random.normal(5.0, 100.0, 100000)
-        # d=DataTypes({'x':x})
-        # d.pyplot(100)
+        x = numpy.random.normal(5.0, 100.0, 100000)
+        d=DataTypes({'x':x})
+        d.pyplot(100)
         pass
     def test_scatter(self):
         x = [5,7,8,7,2,17,2,9,4,11,12,9,6]
