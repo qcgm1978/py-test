@@ -23,6 +23,7 @@ class TDD_TEST_DATA(unittest.TestCase):
         l=[86,87,88,86,87,85,86]
         count=self.d.updateField({'field':'speed','to':l})
         self.assertEqual(count, 1)
+        self.assertAlmostEqual(self.d.getStd(),.9,1)
         
         
 if __name__ == '__main__':

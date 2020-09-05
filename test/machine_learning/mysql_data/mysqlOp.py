@@ -227,9 +227,11 @@ select max(ID) from {0} group by {1}
                 fro = json.dumps(fro)
             self.mycursor.execute(sql, (to, fro))
             self.mydb.commit()
-            return self.mycursor.rowcount
         else:
-            return self.insertInto({d["field"]: to})
+            self.insertInto({d["field"]: to})
+        if isinstance(to, list):
+            self.list=to
+        return self.mycursor.rowcount
     def join(self, isLeft=False, isRight=False):
         if isLeft:
             sql = "SELECT \
