@@ -1,19 +1,18 @@
 # Machine Learning is making the computer learn from studying data and statistics.
-import pandas,pydotplus
-import numpy as np
-import matplotlib.image as pltimg
-import matplotlib.pyplot as plt
+import pandas, pydotplus,math,numpy as np,matplotlib.image as pltimg, matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from mathMethods.doMath import DoMath
 from do_statistics.doStats import DoStats
 from mysql_data.mysqlOp import MysqlOp
-class HandleData(DoMath,DoStats,MysqlOp):
+class HandleData(DoMath, DoStats, MysqlOp):
     def __init__(self, n=None):
-        unique=n['unique'] if 'unique' in n else None
-        MysqlOp.__init__(self,'data',n['sqlData'],db='machine_learning',unique=unique)
+        unique = n["unique"] if "unique" in n else None
+        MysqlOp.__init__(
+            self, "data", n["sqlData"], db="machine_learning", unique=unique
+        )
         if isinstance(n, dict):
-            if 'sqlData' in n:
-                n=n['sqlData'][0]
+            if "sqlData" in n:
+                n = n["sqlData"][0]
             self.info = n
             listProp = list(
                 filter(
@@ -32,7 +31,6 @@ class HandleData(DoMath,DoStats,MysqlOp):
                     self.df = self.mapStrToNum(n["mapData"])
         else:
             self.n = n
-    
     def __getitem__(self, i):
         try:
             return self.info[i]
@@ -42,7 +40,6 @@ class HandleData(DoMath,DoStats,MysqlOp):
         df = self.readCsv(file)
         self.mapStrToNum(dictionary, df)
         return self
-    
     def graphByData(self, img):
         graph = pydotplus.graph_from_dot_data(self.graphData)
         graph.write_png(img)
@@ -85,19 +82,27 @@ class HandleData(DoMath,DoStats,MysqlOp):
         return "color"
     def Ordinal(self):
         return "school grades"
-    def getMean(self):
+    def getMean(self,l=None):
         # return sum(self['speed'])/len(self['speed'])
-        prop = self.prop
-        return np.mean(self[prop])
+        if l is None:
+            l=self.list
+        return np.mean(l)
     def getMedian(self):
         # speed = self['speed'].copy()
         # speed.sort()
         # return speed[len(speed)//2]
         return np.median(self.list)
-    
-    def getStd(self):
-        return np.std(self.list)
-    
+    def getStd(self, l=None):
+        if l is None:
+            l = [self.list]
+        ret = []
+        for val in l:
+            # m = self.getMean(val)
+            # l1=map(lambda item:(item-m)**2,val)
+            # s=math.sqrt(sum(l1)/(len(val)-1))
+            s = np.std(val)
+            ret.append(s)
+        return ret if len(ret) > 1 else ret[0]
     def get1stdProbability(self):
         mean = self.getMean()
         minusSquare = map(lambda x: (x - mean) ** 2, self.list)
@@ -129,11 +134,21 @@ class HandleData(DoMath,DoStats,MysqlOp):
             return 0.015
         elif std2decimal == 2.00:
             return 0.954
-    def getVariance(self):
+    def getVariance(self,l=None):
         # mean = self.getMean()
         # difference = map(lambda x: x - mean, self.list)
         # square = map(lambda x: x ** 2, difference)
         # squareList = list(square)
         # variance = sum(squareList) / len(squareList)
-        variance = np.var(self["speed"])
-        return variance
+        if l is None:
+            l = [self.list]
+        ret = []
+        for val in l:
+            s = np.var(val)
+            ret.append(s)
+        return ret if len(ret) > 1 else ret[0]
+    def compareByVariance(self, l):
+        # If the two variances are not significantly different, then their ratio will be close to 1.
+        if len(l)==2:
+            v1, v2 = self.getVariance(l)
+        return v1/v2
