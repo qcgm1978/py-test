@@ -38,7 +38,7 @@ class TDD_TEST_DATA(unittest.TestCase):
         # expected number of each leading digit per Benford's law
         r = range(1, 10)
         ben = [round(total * self.d.getBenfordLaw(i)) for i in r]
-        compare = self.d.compareByVariance([ben, constantsFren])
+        compare = self.d.compareByVariance([constantsFren,ben])
         self.assertAlmostEqual(compare, 1, 0)
         print(ben, "\n", constantsFren, "\n", compare)
         # self.d.plotBar(ben,r)
