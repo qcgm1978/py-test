@@ -8,7 +8,7 @@ class HandleData(DoMath, DoStats, MysqlOp):
     def __init__(self, n=None):
         if isinstance(n, dict):
             unique = n["unique"] if "unique" in n else None
-            sqlData = n["sqlData"] if 'sqlData' in n else None
+            sqlData = n["sqlData"] if "sqlData" in n else None
             MysqlOp.__init__(
                 self, "data", sqlData, db="machine_learning", unique=unique
             )
@@ -56,10 +56,17 @@ class HandleData(DoMath, DoStats, MysqlOp):
     def readCsv(self, file):
         self.df = pandas.read_csv(file)
         return self.df
-    def getDfCol(self, x=None,condition=':'):
+    def convertSeriesToList(self, p):
+        return p.values.tolist()
+    def getDfCol(self, x=None):
         if x is None:
-            x = self.info['x']
-        return self.df[x][condition]
+            x = self.info["x"][1]
+        return self.df[x]
+    def queryDf(self, s, colName=None):
+        if colName is None and self.info['x']:
+            colName=self.info['x'][1]
+        data = self.df.query(s)
+        return data[colName] if colName else data
     def mapStrToNum(self, dictionary, df=None):
         if df is None:
             df = self.df
@@ -87,4 +94,3 @@ class HandleData(DoMath, DoStats, MysqlOp):
         return "color"
     def Ordinal(self):
         return "school grades"
-    
