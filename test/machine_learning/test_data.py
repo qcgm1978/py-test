@@ -1,5 +1,5 @@
 from datatype import DataTypes
-import unittest, numpy as np
+import math, unittest, numpy as np
 from mysql_data.decorators_func import singleton
 from do_statistics.physical_constants import constantsFren, total
 
@@ -28,8 +28,12 @@ class TDD_TEST_DATA(unittest.TestCase):
         l = [86, 87, 88, 86, 87, 85, 86]
         count = self.d.updateField({"field": "speed", "to": l})
         self.assertEqual(count, 1)
-        self.assertAlmostEqual(self.d.getStd(), 0.9, 1)
+        sd = self.d.getSD()
+        self.assertAlmostEqual(sd, 0.9, 1)
+        self.assertTrue(self.d.isNormalSD())
         self.assertAlmostEqual(self.d.getMean(), 86.4, 1)
+        v = self.d.getVariance()
+        self.assertAlmostEqual(sd,math.sqrt(v),1)
 
     def test_Benford(self):
         b = self.d.getBenfordLaw(1)
@@ -38,12 +42,18 @@ class TDD_TEST_DATA(unittest.TestCase):
         # expected number of each leading digit per Benford's law
         r = range(1, 10)
         ben = [round(total * self.d.getBenfordLaw(i)) for i in r]
-        compare = self.d.compareByVariance([constantsFren,ben])
+        compare = self.d.compareByVariance([constantsFren, ben])
         self.assertAlmostEqual(compare, 1, 0)
-        print(ben, "\n", constantsFren, "\n", compare)
+        # print(ben, "\n", constantsFren, "\n", compare)
         # self.d.plotBar(ben,r)
         # self.d.plotBar(constantsFren,r)
-        self.d.plotGroupedBar(r,observed=constantsFren,predicted=ben,txt='Variance Ratio: '+str(round(compare,2)))
+        # self.d.plotGroupedBar(
+        #     r,
+        #     observed=constantsFren,
+        #     predicted=ben,
+        #     txt="Variance Ratio: " + str(round(compare, 2)),
+        # )
+
 
 if __name__ == "__main__":
     unittest.main()

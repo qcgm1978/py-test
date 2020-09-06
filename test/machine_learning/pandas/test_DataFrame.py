@@ -1,26 +1,29 @@
 # pandas is an open source, BSD-licensed library providing high-performance, easy-to-use data structures and data analysis tools for the Python programming language.
 import unittest, pandas as pd
 import numpy as np
+import sys
+import os
+
+PACKAGE_PARENT = '..'
+SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
+
+from mysql_data.decorators_func  import singleton
 class TDD_DATAFRAME(unittest.TestCase):
-    # First define a class variable that determines
-    # if setUp was ever run
-    ClassIsSetup = False
+    @singleton
     def setUp(self):
-        # If it was not setup yet, do it
-        if not self.ClassIsSetup:
-            data = {
-                "name": ["Jack", "Frank", "Kelly", "Rebecca", "Monica"],
-                "year": [2015, 2011, 2010, 2014, 0],
-                "reports": [24, 4, 2, 31, 0],
-            }
-            self.__class__.df = pd.DataFrame(
-                data,
-                index=["New York", "New Orleans", "Budapest", "Helsinki", "Cologne"],
-            )
-            print(self.df)
-            # remember that it was setup already
-            self.__class__.ClassIsSetup = True
-            return super().setUp()
+        data = {
+            "name": ["Jack", "Frank", "Kelly", "Rebecca", "Monica"],
+            "year": [2015, 2011, 2010, 2014, 0],
+            "reports": [24, 4, 2, 31, 0],
+        }
+        self.__class__.df = pd.DataFrame(
+            data,
+            index=["New York", "New Orleans", "Budapest", "Helsinki", "Cologne"],
+        )
+        print(self.df)
+        # remember that it was setup already
+        return super().setUp()
     # pandas.DataFrame.loc
     # property DataFrame.loc
     # Access a group of rows and columns by label(s) or a boolean array.
