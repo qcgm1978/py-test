@@ -5,32 +5,32 @@ import matplotlib.pyplot as plt
 class Plot(object):
     def plotGroupedBar(
         self,
-        observed,
-        predicted,
+        l1,
+        l2,
         title="Grouped bar chart with labels",
-        actual="Observed",
-        predict="Predict",
+        l1txt="observed",
+        l2txt="Predict",
         prop="Frenquency",
         txt=None,
     ):
         if txt is None:
-            compare = self.compareByVariance([observed, predicted])
+            compare = self.compareByVariance([l1, l2])
             txt = "Variance Ratio: " + str(round(compare, 2))
 
-        lenO = len(observed)
-        lenP=len(predicted)
+        lenO = len(l1)
+        lenP=len(l2)
         if lenO<=lenP:
             minLen=lenO
-            predicted=predicted[:minLen]
+            l2=l2[:minLen]
         else:
             minLen=lenP
-            observed=observed[:minLen]
+            l1=l1[:minLen]
         labels = range(1, minLen+1)
         x = np.arange(len(labels))  # the label locations
         width = 0.35  # the width of the bars
         fig, ax = plt.subplots()
-        rects1 = ax.bar(x - width / 2, observed, width, label=actual)
-        rects2 = ax.bar(x + width / 2, predicted, width, label=predict)
+        rects1 = ax.bar(x - width / 2, l1, width, label=l1txt)
+        rects2 = ax.bar(x + width / 2, l2, width, label=l2txt)
         # Add some text for labels, title and custom x-axis tick labels, etc.
         ax.set_ylabel(prop)
         ax.set_title(title)

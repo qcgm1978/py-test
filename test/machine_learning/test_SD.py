@@ -21,10 +21,10 @@ class TDD_TEST_SD(unittest.TestCase):
         self.assertAlmostEqual(self.d.getSD(self.l2),384.3,1)
     def test_plot(self):
         self.d.plotGroupedBar(
-            observed=self.l1.values.tolist(),
-            predicted=self.l2.values.tolist(),
-            actual="Male",
-            predict="Female",
+            l1=self.l1,
+            l2=self.l2,
+            l1txt="Male",
+            l2txt="Female",
             title='Furness data set on metabolic rates of northern fulmars',
             prop='Metabolic rate'
         )

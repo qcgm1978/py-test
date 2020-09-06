@@ -41,8 +41,8 @@ class TDD_TEST_DATA(unittest.TestCase):
         # self.d.plotBar(ben,r)
         # self.d.plotBar(constantsFren,r)
         self.d.plotGroupedBar(
-            observed=constantsFren,
-            predicted=ben,
+            l1=constantsFren,
+            l2=ben,
         )
 if __name__ == "__main__":
     unittest.main()
