@@ -1,4 +1,4 @@
-import numpy as np
+import math, numpy as np
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MaxNLocator
@@ -109,9 +109,10 @@ class Plot(object):
         self.demo_con_style(ax, "Female,Std. Dev.,{0}".format(int(round(self.getSD(l[1][1], ddof=1)))),2.2,l[1][1][-1])
         self.show()
     def demo_con_style(self,ax, connectionstyle,x,mean):
-        position=(x,mean-100)
-        x1, y1 = position[0]-.1, mean-200
-        x2, y2 = position[0]-.1, mean+200
+        ratio=mean/10**math.ceil(math.log10(mean))
+        x1, y1 = x-.1, mean-mean*ratio
+        x2, y2 = x-.1, mean+mean*ratio
+        position=(x,mean-300*ratio)
         ax.plot([x1, x2], [y1, y2])
         # Axes.annotate(self, text, xy, *args, **kwargs)
         # Annotate the point xy with text 'text'.
@@ -127,16 +128,6 @@ class Plot(object):
                     )
         ax.text(.05, .95, connectionstyle.replace(",", ",\n"),
                  position=position, va="bottom",color=self.red)
-    # def plotArrow(self,ax):
-    #     x_tail = 0.1
-    #     y_tail = 0.1
-    #     x_head = 0.1
-    #     y_head = 0.9
-    #     dx = x_head - x_tail
-    #     dy = y_head - y_tail
-    #     arrow = mpatches.FancyArrowPatch(posA=(x_tail, y_tail), posB=(dx, dy),
-    #                              mutation_scale=10)
-    #     ax.add_patch(arrow)
     def scatter(self, x=None, y=None):
         if x is None or y is None:
             x = self.info["x"]
