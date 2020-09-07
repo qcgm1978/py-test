@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter, MaxNLocator
 class Plot(object):
+    red='#F11F10'
     def plotGroupedBar(
         self,
         l1,
@@ -90,45 +92,50 @@ class Plot(object):
             y=i[1]
             if isinstance(i[0],str):
                 x=[ind+1]*len(y)
-            c='#F11F10' if len(y)==1 else '#0E0E0E'
+            c='#fff' if len(y)==1 else '#0E0E0E'
             ax.scatter(x, y,c=c)
             # if ind%2:
             # labels[ind] = i[0]
-        fig.canvas.draw()
-        labels = [item.get_text() for item in ax.get_xticklabels()]
-        labels[1] = l[0][0]
-        labels[3] = l[1][0]
-        labels[5] = l[2][0]
-        labels[7] = l[3][0]
-        ax.set_xticklabels(labels)
-        self.demo_con_style(ax, "Male,Std. Dev.,{0}".format(round(self.getSD(l[0][1], ddof=1))),(1.6,2000))
-        self.demo_con_style(ax, "Female,Std. Dev.,{0}".format(round(self.getSD(l[1][1], ddof=1))),(2.2,2000))
+        # fig.canvas.draw()
+        labels = list(map(lambda item:item[0],l))
+        def format_fn(tick_val, tick_pos):
+            if int(tick_val) in range(1,3):
+                return labels[int(tick_val)-1]
+            else:
+                return ''
+        ax.xaxis.set_major_formatter(FuncFormatter(format_fn))
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        self.demo_con_style(ax, "Male,Std. Dev.,{0}".format(int(round(self.getSD(l[0][1], ddof=1)))),(1.2,2500))
+        self.demo_con_style(ax, "Female,Std. Dev.,{0}".format(int(round(self.getSD(l[1][1], ddof=1)))),(2.2,2500))
         self.show()
     def demo_con_style(self,ax, connectionstyle,position):
-        x1, y1 = position[0]-.1, 2000
-        x2, y2 = position[0]-.1, 1500
+        x1, y1 = position[0]-.1, 3000
+        x2, y2 = position[0]-.1, 2500
         ax.plot([x1, x2], [y1, y2])
+        # Axes.annotate(self, text, xy, *args, **kwargs)
+        # Annotate the point xy with text 'text'.
+        # Optionally, the text can be displayed in another position xytext. An arrow pointing from the text to the annotated point xy can then be added by defining arrowprops.
         ax.annotate("",
                     xy=(x1, y1), xycoords='data',
                     xytext=(x2, y2), textcoords='data',
-                    arrowprops=dict(arrowstyle="<->", color="0.5",
-                                    # shrinkA=5, shrinkB=5,
-                                    patchA=None, patchB=None,
+                    arrowprops=dict(arrowstyle="<->", color=self.red,
+                                    shrinkA=0, shrinkB=0,
+                                    # patchA=None, patchB=None,
                                     # connectionstyle=connectionstyle,
                                     ),
                     )
         ax.text(.05, .95, connectionstyle.replace(",", ",\n"),
-                 position=position, va="top")
-    def plotArrow(self,ax):
-        x_tail = 0.1
-        y_tail = 0.1
-        x_head = 0.1
-        y_head = 0.9
-        dx = x_head - x_tail
-        dy = y_head - y_tail
-        arrow = mpatches.FancyArrowPatch(posA=(x_tail, y_tail), posB=(dx, dy),
-                                 mutation_scale=10)
-        ax.add_patch(arrow)
+                 position=position, va="bottom",color=self.red)
+    # def plotArrow(self,ax):
+    #     x_tail = 0.1
+    #     y_tail = 0.1
+    #     x_head = 0.1
+    #     y_head = 0.9
+    #     dx = x_head - x_tail
+    #     dy = y_head - y_tail
+    #     arrow = mpatches.FancyArrowPatch(posA=(x_tail, y_tail), posB=(dx, dy),
+    #                              mutation_scale=10)
+    #     ax.add_patch(arrow)
     def scatter(self, x=None, y=None):
         if x is None or y is None:
             x = self.info["x"]
