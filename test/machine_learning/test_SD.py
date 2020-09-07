@@ -39,8 +39,8 @@ class TDD_TEST_SD(unittest.TestCase):
         fMean=self.d.getMean(self.l2)
         self.d.scatterGrouped(
             [
-                ("Male", y1 + [mMean]),
-                ("Female", y2+[fMean]),
+                ("Male", y1.values.tolist() + [mMean]),
+                ("Female", y2.values.tolist()+[fMean]),
                 ("Male Mean", [mMean]),
                 ("Female Mean", [fMean]),
             ],

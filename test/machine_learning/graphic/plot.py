@@ -92,7 +92,7 @@ class Plot(object):
             y=i[1]
             if isinstance(i[0],str):
                 x=[ind+1]*len(y)
-            c='#fff' if len(y)==1 else '#0E0E0E'
+            c='#fff' if len(y)==1 else (['#0E0E0E']*(len(y)-1)+[self.red])
             ax.scatter(x, y,c=c)
             # if ind%2:
             # labels[ind] = i[0]
@@ -105,12 +105,12 @@ class Plot(object):
                 return ''
         ax.xaxis.set_major_formatter(FuncFormatter(format_fn))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        self.demo_con_style(ax, "Male,Std. Dev.,{0}".format(int(round(self.getSD(l[0][1], ddof=1)))),(1.2,2500))
-        self.demo_con_style(ax, "Female,Std. Dev.,{0}".format(int(round(self.getSD(l[1][1], ddof=1)))),(2.2,2500))
+        self.demo_con_style(ax, "Male,Std. Dev.,{0}".format(int(round(self.getSD(l[0][1], ddof=1)))),(1.2,1200))
+        self.demo_con_style(ax, "Female,Std. Dev.,{0}".format(int(round(self.getSD(l[1][1], ddof=1)))),(2.2,1200))
         self.show()
     def demo_con_style(self,ax, connectionstyle,position):
-        x1, y1 = position[0]-.1, 3000
-        x2, y2 = position[0]-.1, 2500
+        x1, y1 = position[0]-.1, 1700
+        x2, y2 = position[0]-.1, 1000
         ax.plot([x1, x2], [y1, y2])
         # Axes.annotate(self, text, xy, *args, **kwargs)
         # Annotate the point xy with text 'text'.
