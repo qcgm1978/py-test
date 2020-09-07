@@ -1,7 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-
 class Plot(object):
     def plotGroupedBar(
         self,
@@ -16,16 +14,8 @@ class Plot(object):
         if txt is None:
             compare = self.compareByVariance([l1, l2])
             txt = "Variance Ratio: " + str(round(compare, 2))
-
-        lenO = len(l1)
-        lenP=len(l2)
-        if lenO<=lenP:
-            minLen=lenO
-            l2=l2[:minLen]
-        else:
-            minLen=lenP
-            l1=l1[:minLen]
-        labels = range(1, minLen+1)
+        l1, l2,minLen = self.normalize(l1, l2)
+        labels = range(1, minLen + 1)
         x = np.arange(len(labels))  # the label locations
         width = 0.35  # the width of the bars
         fig, ax = plt.subplots()
@@ -40,7 +30,6 @@ class Plot(object):
         plt.figtext(
             0.5, 0.01, txt, wrap=True, horizontalalignment="center", fontsize=12
         )
-
         def autolabel(rects):
             """Attach a text label above each bar in *rects*, displaying its height."""
             for rect in rects:
@@ -53,12 +42,20 @@ class Plot(object):
                     ha="center",
                     va="bottom",
                 )
-
         autolabel(rects1)
         autolabel(rects2)
         fig.tight_layout()
         self.show()
-
+    def normalize(self, l1, l2):
+        lenO = len(l1)
+        lenP = len(l2)
+        if lenO <= lenP:
+            minLen = lenO
+            l2 = l2[:minLen]
+        else:
+            minLen = lenP
+            l1 = l1[:minLen]
+        return  l1, l2,minLen
     def plotBar(
         self, height, x=None,
     ):
@@ -66,11 +63,9 @@ class Plot(object):
             x = self.list
         plt.bar(x, height)
         self.show()
-
     def pyplot(self, bars=5):
         plt.hist(self.list, bars)
         self.show()
-
     def polynomialRegressionLine(self):
         x = self.info["x"]
         y = self.info["y"]
@@ -82,16 +77,28 @@ class Plot(object):
         self.scatter()
         plt.plot(myline, mymodel(myline))
         self.show()
-
+    def scatterDots(self,x,y):
+        self.scatter(x,y)
+        self.show()
+    def scatterGrouped(self,l,title='',xTxt='',yTxt=''):
+        fig, ax = plt.subplots()
+        ax.set_title(title)
+        ax.set_xlabel(xTxt)
+        ax.set_ylabel(yTxt)
+        for i in l:
+            y=i[1]
+            if isinstance(i[0],str):
+                x=[i[0]]*len(y)
+            ax.scatter(x, y)
+        self.show()
     def scatter(self, x=None, y=None):
         if x is None or y is None:
             x = self.info["x"]
             y = self.info["y"]
-        plt.scatter(x, y)
-
+        l1, l2,minLen = self.normalize(x,y)
+        plt.scatter(l1, l2)
     def show(self):
         plt.show()
-
     def scatterLine(self):
         mymodel = self.getModel()
         self.scatter()
