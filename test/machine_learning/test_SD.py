@@ -17,26 +17,6 @@ class TDD_TEST_SD(unittest.TestCase):
         self.assertIsInstance(self.d.df, pandas.core.frame.DataFrame)
         mr = self.d.getDfCol()
         self.assertIsInstance(mr, pandas.core.series.Series)
-        l = self.d.convertSeriesToList(mr)
-        self.assertEqual(
-            l,
-            [
-                525.8,
-                605.7,
-                843.3,
-                1195.5,
-                1945.6,
-                2135.6,
-                2308.7,
-                2950.0,
-                727.7,
-                1086.5,
-                1091.0,
-                1361.3,
-                1490.5,
-                1956.1,
-            ],
-        )
         self.assertAlmostEqual(self.d.getSD(mr), 694.4, 1)
         self.assertAlmostEqual(self.s1, 894.37, 2)
         self.assertAlmostEqual(self.s2, 420.96, 2)
@@ -51,12 +31,11 @@ class TDD_TEST_SD(unittest.TestCase):
         # )
         y1 = self.l1
         y2 = self.l2
-        # self.d.scatterDots(x,y)
-        # self.d.scatterGrouped(
-        #     [("Male", y1), ("Female", y2)],
-        #     title="Metabolic rate versus sex for 14 northern fulmars",
-        #     yTxt="Matabolic rate",
-        #     xTxt="Sex",
-        # )
+        self.d.scatterGrouped(
+            [("Male", y1), ("Female", y2),("Male Mean", [self.d.getMean(self.l1)]), ("Female Mean", [self.d.getMean(self.l2)])],
+            title="Metabolic rate versus sex for 14 northern fulmars",
+            yTxt="Matabolic rate",
+            xTxt="Sex",
+        )
 if __name__ == "__main__":
     unittest.main()
