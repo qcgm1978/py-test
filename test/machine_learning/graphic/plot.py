@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 class Plot(object):
     red='#F11F10'
+    white='#fff'
+    black='#0E0E0E'
     def plotGroupedBar(
         self,
         l1,
@@ -83,36 +85,44 @@ class Plot(object):
     def scatterDots(self,x,y):
         self.scatter(x,y)
         self.show()
-    def scatterGrouped(self,l,title='',xTxt='',yTxt=''):
-        fig, ax = plt.subplots()
-        ax.set_title(title)
+    def setTxt(self,ax,title,xTxt,yTxt):
+        ax.set_title('\n'.join(title),loc='left')
         ax.set_xlabel(xTxt)
         ax.set_ylabel(yTxt)
-        for ind,i in enumerate(l):
-            y=i[1]
-            if isinstance(i[0],str):
-                x=[ind+1]*len(y)
-            c='#fff' if len(y)==1 else (['#0E0E0E']*(len(y)-1)+[self.red])
-            ax.scatter(x, y,c=c)
-            # if ind%2:
-            # labels[ind] = i[0]
-        # fig.canvas.draw()
-        labels = list(map(lambda item:item[0],l))
+    def setLables(self,ax,l):
         def format_fn(tick_val, tick_pos):
             if int(tick_val) in range(1,3):
                 return labels[int(tick_val)-1]
             else:
                 return ''
+        labels = list(map(lambda item:item[0],l))
         ax.xaxis.set_major_formatter(FuncFormatter(format_fn))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        self.demo_con_style(ax, "Male,Std. Dev.,{0}".format(int(round(self.getSD(l[0][1], ddof=1)))),1.2,l[0][1][-1])
-        self.demo_con_style(ax, "Female,Std. Dev.,{0}".format(int(round(self.getSD(l[1][1], ddof=1)))),2.2,l[1][1][-1])
+    def scatterGrouped(self,l,title='',xTxt='',yTxt=''):
+        fig, ax = plt.subplots()
+        self.setTxt(ax,title,xTxt,yTxt)
+        self.addScatter(ax,l)
+        self.setLables(ax,l)
         self.show()
-    def demo_con_style(self,ax, connectionstyle,x,mean):
+    def addScatter(self,ax,l):
+        for ind,i in enumerate(l):
+            y=i[1]
+            if isinstance(i[0],str):
+                x=[ind+1]*len(y)
+            if len(y)==1:
+                c=self.white  
+            else:
+                c=[self.black]*(len(y)-1)+[self.red]
+                self.addArrowTxt(ax,ind,l)
+            ax.scatter(x, y,c=c)
+    def addArrowTxt(self,ax,ind,l ):
+        txt=l[ind][2]
+        x=ind+1
+        mean=l[ind][1][-1]
         ratio=mean/10**math.ceil(math.log10(mean))
-        x1, y1 = x-.1, mean-mean*ratio
-        x2, y2 = x-.1, mean+mean*ratio
-        position=(x,mean-300*ratio)
+        x1, y1 = x+.1, mean-mean*ratio
+        x2, y2 = x+.1, mean+mean*ratio
+        position=(x+.2,mean-300*ratio)
         ax.plot([x1, x2], [y1, y2])
         # Axes.annotate(self, text, xy, *args, **kwargs)
         # Annotate the point xy with text 'text'.
@@ -123,10 +133,11 @@ class Plot(object):
                     arrowprops=dict(arrowstyle="<->", color=self.red,
                                     shrinkA=0, shrinkB=0,
                                     # patchA=None, patchB=None,
-                                    # connectionstyle=connectionstyle,
+                                    # txt=txt,
                                     ),
                     )
-        ax.text(.05, .95, connectionstyle.replace(",", ",\n"),
+        strings = [str(item) for item in txt]
+        ax.text(.05, .95, "\n".join(strings),
                  position=position, va="bottom",color=self.red)
     def scatter(self, x=None, y=None):
         if x is None or y is None:

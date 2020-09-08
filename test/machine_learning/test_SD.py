@@ -1,8 +1,6 @@
 from datatype import DataTypes
 import unittest, pandas
 from mysql_data.decorators_func import singleton
-
-
 class TDD_TEST_SD(unittest.TestCase):
     @singleton
     def setUp(self):
@@ -15,7 +13,6 @@ class TDD_TEST_SD(unittest.TestCase):
         self.__class__.l2 = self.__class__.d.queryDf('Sex == "Female"')
         self.__class__.s1 = self.__class__.d.getSD(self.__class__.l1, ddof=1)
         self.__class__.s2 = self.__class__.d.getSD(self.__class__.l2, ddof=1)
-
     def test_test_SD(self):
         self.assertIsInstance(self.d.df, pandas.core.frame.DataFrame)
         mr = self.d.getDfCol()
@@ -23,7 +20,6 @@ class TDD_TEST_SD(unittest.TestCase):
         self.assertAlmostEqual(self.d.getSD(mr), 694.4, 1)
         self.assertAlmostEqual(self.s1, 894.37, 2)
         self.assertAlmostEqual(self.s2, 420.96, 2)
-
     def test_plot(self):
         # self.d.plotGroupedBar(
         #     l1=self.l1,
@@ -37,18 +33,18 @@ class TDD_TEST_SD(unittest.TestCase):
         y2 = self.l2
         mMean = self.d.getMean(self.l1)
         fMean=self.d.getMean(self.l2)
+        t1=['Female','Std. Dev.',int(round(self.s1)) ]
+        t2=['Male',"Std. Dev",int(round(self.s2)) ]
         self.d.scatterGrouped(
             [
-                ("Male", y1.values.tolist() + [mMean]),
-                ("Female", y2.values.tolist()+[fMean]),
-                ("Male Mean", [mMean]),
+                ("Female", y2.values.tolist()+[fMean],t1),
+                ("Male", y1.values.tolist() + [mMean],t2),
                 ("Female Mean", [fMean]),
+                ("Male Mean", [mMean]),
             ],
-            title="Metabolic rate versus sex for 14 northern fulmars",
+            title=['Sample standard deviation of','metabolic rate in male and female fulmars'],
             yTxt="Matabolic rate",
             xTxt="Sex",
         )
-
-
 if __name__ == "__main__":
     unittest.main()
